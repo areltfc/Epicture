@@ -8,6 +8,8 @@ import android.webkit.WebViewClient;
 
 public class MainActivity extends AppCompatActivity {
 
+    private User user = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -21,10 +23,14 @@ public class MainActivity extends AppCompatActivity {
             WebView view = new WebView(this);
             WebViewClient redirectUrl = new AuthWebViewClient(this);
             view.setWebViewClient(redirectUrl);
-            view.loadUrl("https://api.imgur.com/oauth2/authorize?client_id=7f1c902a0216035&response_type=token&state=application");
+            view.loadUrl("https://api.imgur.com/oauth2/authorize?client_id=7f1c902a0216035&response_type=token");
             setContentView(view);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    public void setUser(User user) { this.user = user; }
+
+    public User getUser() { return user; }
 }

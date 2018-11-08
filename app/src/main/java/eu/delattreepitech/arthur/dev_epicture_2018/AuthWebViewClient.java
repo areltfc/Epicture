@@ -17,7 +17,9 @@ public class AuthWebViewClient extends WebViewClient {
             view.loadUrl(url);
             return true;
         } else {
-            System.out.println(url);
+            if (this.main.getUser() == null) {
+                this.main.setUser(new User(url));
+            }
             return false;
         }
     }
