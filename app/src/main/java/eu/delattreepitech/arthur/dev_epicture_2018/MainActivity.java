@@ -19,11 +19,10 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             WebView view = new WebView(this);
-            WebViewClient redirectUrl = new AuthWebViewClient();
+            WebViewClient redirectUrl = new AuthWebViewClient(this);
             view.setWebViewClient(redirectUrl);
             view.loadUrl("https://api.imgur.com/oauth2/authorize?client_id=7f1c902a0216035&response_type=token&state=application");
             setContentView(view);
-            System.out.println(((AuthWebViewClient) redirectUrl).getUrl());
         } catch (Exception e) {
             e.printStackTrace();
         }

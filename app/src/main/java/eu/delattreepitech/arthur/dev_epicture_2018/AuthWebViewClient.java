@@ -4,13 +4,21 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 public class AuthWebViewClient extends WebViewClient {
-    private String url;
+    MainActivity main;
+
+    AuthWebViewClient(MainActivity main) {
+        super();
+        this.main = main;
+    }
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        this.url = url;
-        return false;
+        if (url.contains("facebook") || url.contains("twitter") || url.contains("google") || url.contains("yahoo")) {
+            view.loadUrl(url);
+            return true;
+        } else {
+            System.out.println(url);
+            return false;
+        }
     }
-
-    public String getUrl() { return this.url; }
 }
