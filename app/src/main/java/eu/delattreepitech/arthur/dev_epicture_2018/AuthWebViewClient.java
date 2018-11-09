@@ -19,6 +19,7 @@ public class AuthWebViewClient extends WebViewClient {
         } else {
             if (this.main.getUser() == null) {
                 this.main.setUser(new User(url));
+                this.main.setContentView(R.layout.activity_main);
             }
             return false;
         }
