@@ -95,7 +95,6 @@ public class SearchImage extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(@NonNull ImageViewHolder imageViewHolder, int i) {
-                System.out.println(images.get(i).getName());
                 Picasso.get().load("https://i.imgur.com/" + images.get(i).getId() + ".jpg").into(imageViewHolder._image);
                 imageViewHolder._name.setText(images.get(i).getName());
             }
