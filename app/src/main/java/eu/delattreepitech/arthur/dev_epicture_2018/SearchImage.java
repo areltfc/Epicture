@@ -1,11 +1,8 @@
 package eu.delattreepitech.arthur.dev_epicture_2018;
 
-import android.content.Intent;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import java.util.Objects;
 
@@ -16,13 +13,11 @@ public class SearchImage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        String accessToken = Objects.requireNonNull(getIntent().getExtras()).getString("AccessToken");
-        System.out.println(accessToken);
-
+        String tokensUrl = Objects.requireNonNull(getIntent().getExtras()).getString("tokensUrl");
+        this.user = new User(tokensUrl);
+        System.out.println(this.user.getAccessToken());
         this.searchImage();
     }
 

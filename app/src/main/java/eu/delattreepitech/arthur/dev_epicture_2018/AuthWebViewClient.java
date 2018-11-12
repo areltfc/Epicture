@@ -1,15 +1,17 @@
 package eu.delattreepitech.arthur.dev_epicture_2018;
 
+import android.content.Intent;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
 public class AuthWebViewClient extends WebViewClient {
-    private MainActivity main;
+    private MainActivity context;
+    private boolean stopRedirecting;
 
-    AuthWebViewClient(MainActivity main) {
+    AuthWebViewClient(MainActivity context) {
         super();
-        this.main = main;
+        this.context = context;
+        this.stopRedirecting = false;
     }
 
     @Override
@@ -18,11 +20,17 @@ public class AuthWebViewClient extends WebViewClient {
             view.loadUrl(url);
             return true;
         } else {
-            if (this.main.getUser() == null) {
-                this.main.setUser(new User(url));
-                this.main.setContentView(R.layout.activity_main);
+            if (!this.stopRedirecting) {
+                this.stopRedirecting = true;
+                this.accessGranted(url);
             }
             return false;
         }
+    }
+
+    private void accessGranted(String url) {
+        final Intent searchImage = new Intent(this.context, SearchImage.class);
+        searchImage.putExtra("tokensUrl", url);
+        this.context.startActivity(searchImage);
     }
 }
