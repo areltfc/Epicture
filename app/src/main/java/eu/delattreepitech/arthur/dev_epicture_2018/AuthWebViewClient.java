@@ -20,9 +20,13 @@ public class AuthWebViewClient extends WebViewClient {
             view.loadUrl(url);
             return true;
         } else {
-            if (!this.stopRedirecting) {
-                this.stopRedirecting = true;
-                this.accessGranted(url);
+            if (url.contains("callback?error=access_denied")) {
+                this.context.setContentView(R.layout.access_denied);
+            } else {
+                if (!this.stopRedirecting) {
+                    this.stopRedirecting = true;
+                    this.accessGranted(url);
+                }
             }
             return false;
         }
