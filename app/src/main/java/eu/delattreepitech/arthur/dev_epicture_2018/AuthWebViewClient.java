@@ -2,9 +2,10 @@ package eu.delattreepitech.arthur.dev_epicture_2018;
 
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 public class AuthWebViewClient extends WebViewClient {
-    MainActivity main;
+    private MainActivity main;
 
     AuthWebViewClient(MainActivity main) {
         super();
@@ -19,6 +20,7 @@ public class AuthWebViewClient extends WebViewClient {
         } else {
             if (this.main.getUser() == null) {
                 this.main.setUser(new User(url));
+                this.main.setContentView(R.layout.activity_main);
             }
             return false;
         }
