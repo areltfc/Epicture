@@ -1,4 +1,4 @@
-package eu.delattreepitech.arthur.dev_epicture_2018;
+package eu.delattreepitech.arthur.dev_epicture_2018.activities;
 
 import android.graphics.Rect;
 import android.os.StrictMode;
@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.squareup.picasso.Picasso;
 
@@ -21,11 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import eu.delattreepitech.arthur.dev_epicture_2018.Image;
+import eu.delattreepitech.arthur.dev_epicture_2018.ImageViewHolder;
+import eu.delattreepitech.arthur.dev_epicture_2018.R;
+import eu.delattreepitech.arthur.dev_epicture_2018.User;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class SearchImage extends AppCompatActivity {
+public class Home extends AppCompatActivity {
 
     private User _user = null;
     private OkHttpClient _client;
@@ -40,10 +43,10 @@ public class SearchImage extends AppCompatActivity {
         assert tokensUrl != null;
         _user = new User(tokensUrl);
         _client = new OkHttpClient.Builder().build();
-        this.searchImage();
+        this.displayHome();
     }
 
-    protected void searchImage() {
+    protected void displayHome() {
         try {
             Request request = new Request.Builder().url("https://api.imgur.com/3/gallery/hot/viral/")
                     .addHeader("Authorization", "Bearer " + _user.getAccessToken())
@@ -122,5 +125,4 @@ public class SearchImage extends AppCompatActivity {
     public void onClickSearch(MenuItem item) {
         System.out.println(item);
     }
-
 }

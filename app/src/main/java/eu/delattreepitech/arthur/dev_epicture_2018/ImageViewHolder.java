@@ -6,10 +6,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ImageViewHolder extends RecyclerView.ViewHolder {
-    ImageView _image;
-    TextView _name;
+    public ImageView _image;
+    public TextView _name;
 
-    ImageViewHolder(View itemView) {
+    public ImageViewHolder(View itemView) {
         super(itemView);
     }
 }

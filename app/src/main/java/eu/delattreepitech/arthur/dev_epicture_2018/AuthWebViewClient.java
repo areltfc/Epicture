@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import eu.delattreepitech.arthur.dev_epicture_2018.activities.Home;
+import eu.delattreepitech.arthur.dev_epicture_2018.activities.MainActivity;
+
 public class AuthWebViewClient extends WebViewClient {
     private MainActivity context;
     private boolean stopRedirecting;
 
-    AuthWebViewClient(MainActivity context) {
+    public AuthWebViewClient(MainActivity context) {
         super();
         this.context = context;
         this.stopRedirecting = false;
@@ -33,7 +36,7 @@ public class AuthWebViewClient extends WebViewClient {
     }
 
     private void accessGranted(String url) {
-        final Intent searchImage = new Intent(this.context, SearchImage.class);
+        final Intent searchImage = new Intent(this.context, Home.class);
         searchImage.putExtra("tokensUrl", url);
         this.context.startActivity(searchImage);
     }
