@@ -7,16 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -73,9 +73,7 @@ public class SearchImage extends AppCompatActivity {
                     }
                 });
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -112,4 +110,17 @@ public class SearchImage extends AppCompatActivity {
             }
         });
     }
+
+    public void onClickHome(MenuItem item) {
+        System.out.println(item);
+    }
+
+    public void onClickProfile(MenuItem item) {
+        System.out.println(item);
+    }
+
+    public void onClickSearch(MenuItem item) {
+        System.out.println(item);
+    }
+
 }

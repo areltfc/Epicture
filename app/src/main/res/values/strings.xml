@@ -2,4 +2,7 @@
     <string name="app_name">DEV_epicture_2018</string>
     <string name="welcome">Bienvenue sur Epicture</string>
     <string name="api_access_denied">Epicture was not allowed to access the Imgur API</string>
+    <string name="navigation_home">Home</string>
+    <string name="navigation_profile">Profile</string>
+    <string name="navigation_search">Search</string>
 </resources>
