@@ -65,8 +65,11 @@ public class Search extends AppCompatActivity {
     }
 
     protected void displaySearch(String query) {
+        Spinner sort = findViewById(R.id.search_sort);
+        Spinner window = findViewById(R.id.search_window);
+        String url = "https://api.imgur.com/3/gallery/search/" + sort.getSelectedItem().toString().toLowerCase() + "/" + window.getSelectedItem().toString().toLowerCase() + "/?q=" + query;
         try {
-            Request request = new Request.Builder().url("https://api.imgur.com/3/gallery/search/?q=" + query)
+            Request request = new Request.Builder().url(url)
                     .addHeader("Authorization", "Bearer " + _user.getAccessToken())
                     .build();
             _client.newCall(request).enqueue(new Callback() {
