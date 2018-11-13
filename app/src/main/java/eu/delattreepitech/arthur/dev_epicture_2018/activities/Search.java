@@ -23,9 +23,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+import eu.delattreepitech.arthur.dev_epicture_2018.BaseAdapter;
 import eu.delattreepitech.arthur.dev_epicture_2018.Image;
 import eu.delattreepitech.arthur.dev_epicture_2018.ImageViewHolder;
-import eu.delattreepitech.arthur.dev_epicture_2018.JsonToList;
+import eu.delattreepitech.arthur.dev_epicture_2018.InterpretAPIRequest;
 import eu.delattreepitech.arthur.dev_epicture_2018.R;
 import eu.delattreepitech.arthur.dev_epicture_2018.User;
 import okhttp3.Call;
@@ -100,7 +101,7 @@ public class Search extends AppCompatActivity {
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     try {
-                        final List<Image> images = JsonToList.Images(response.body().string());
+                        final List<Image> images = InterpretAPIRequest.JSONToImages(response.body().string());
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -120,31 +121,11 @@ public class Search extends AppCompatActivity {
     private void render(final List<Image> images) {
         RecyclerView v = findViewById(R.id.home_view);
         v.setLayoutManager(new LinearLayoutManager(this));
-        RecyclerView.Adapter<ImageViewHolder> adapter = new RecyclerView.Adapter<ImageViewHolder>() {
-            @NonNull
-            @Override
-            public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-                ImageViewHolder vh = new ImageViewHolder(getLayoutInflater().inflate(R.layout.home_view_item, null));
-                vh._image = vh.itemView.findViewById(R.id.photo);
-                vh._name = vh.itemView.findViewById(R.id.title);
-                return vh;
-            }
-
-            @Override
-            public void onBindViewHolder(@NonNull ImageViewHolder imageViewHolder, int i) {
-                Picasso.get().load("https://i.imgur.com/" + images.get(i).getId() + ".jpg").into(imageViewHolder._image);
-                imageViewHolder._name.setText(images.get(i).getName());
-            }
-
-            @Override
-            public int getItemCount() {
-                return images.size();
-            }
-        };
+        BaseAdapter adapter = new BaseAdapter(this, images, _user.getAccessToken());
         v.setAdapter(adapter);
         v.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
                 outRect.bottom = 16;
             }
         });
