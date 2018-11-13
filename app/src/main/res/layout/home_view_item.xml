@@ -4,18 +4,24 @@
     android:layout_height="wrap_content"
     android:background="@android:color/white">
     <LinearLayout
-        android:orientation="vertical" android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <ImageView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:scaleType="centerCrop"
-            android:id="@+id/photo"/>
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+                android:id="@+id/photo"/>
+        </RelativeLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/title"
-            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textAppearance="@android:style/TextAppearance.Medium"
             android:layout_margin="8dp"
             android:textAlignment="center"/>
     </LinearLayout>
