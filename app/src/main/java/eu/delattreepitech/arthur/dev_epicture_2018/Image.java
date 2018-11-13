@@ -29,6 +29,8 @@ public class Image {
     private void purify() {
         if (_name.equals("null")) {
             _name = "(Untitled picture)";
+        } else if (_name.length() > 40) {
+            _name = _name.substring(0, 37) + "...";
         }
     }
 }

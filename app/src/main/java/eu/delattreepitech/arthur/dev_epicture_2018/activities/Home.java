@@ -118,7 +118,11 @@ public class Home extends AppCompatActivity {
         });
     }
 
-    public void onClickHome(MenuItem item) {}
+    public void onClickHome(MenuItem item) {
+        final Intent home = new Intent(Home.this, Home.class);
+        home.putExtra("tokensUrl", getIntent().getStringExtra("tokensUrl"));
+        startActivity(home);
+    }
 
     public void onClickProfile(MenuItem item) {
         final Intent profile = new Intent(Home.this, Profile.class);

@@ -138,10 +138,14 @@ public class Search extends AppCompatActivity {
     }
 
     public void onClickProfile(MenuItem item) {
-        final Intent home = new Intent(Search.this, Profile.class);
-        home.putExtra("tokensUrl", getIntent().getStringExtra("tokensUrl"));
-        startActivity(home);
+        final Intent profile = new Intent(Search.this, Profile.class);
+        profile.putExtra("tokensUrl", getIntent().getStringExtra("tokensUrl"));
+        startActivity(profile);
     }
 
-    public void onClickSearch(MenuItem item) {}
+    public void onClickSearch(MenuItem item) {
+        final Intent search = new Intent(Search.this, Search.class);
+        search.putExtra("tokensUrl", getIntent().getStringExtra("tokensUrl"));
+        startActivity(search);
+    }
 }
