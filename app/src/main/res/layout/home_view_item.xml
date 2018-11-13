@@ -5,21 +5,23 @@
     android:background="@android:color/white">
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:id="@+id/photo"
-            android:clickable="true"/>
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+                android:id="@+id/photo"/>
+        </RelativeLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/title"
-            android:textAppearance="@android:style/TextAppearance.Large"
+            android:textAppearance="@android:style/TextAppearance.Medium"
             android:layout_margin="8dp"
             android:textAlignment="center"
             android:clickable="true"/>
