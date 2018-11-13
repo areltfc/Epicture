@@ -21,7 +21,7 @@ public class Search extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
-        this.setContentView(R.layout.activity_main);
+        this.setContentView(R.layout.search_layout);
 
         String tokensUrl = Objects.requireNonNull(getIntent().getExtras()).getString("tokensUrl");
         assert tokensUrl != null;

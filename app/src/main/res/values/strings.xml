@@ -5,4 +5,18 @@
     <string name="navigation_home">Home</string>
     <string name="navigation_profile">Profile</string>
     <string name="navigation_search">Search</string>
+
+    <string-array name="search_sort_items">
+        <item>Time</item>
+        <item>Viral</item>
+        <item>Top</item>
+    </string-array>
+
+    <string-array name="search_window_items">
+        <item>All</item>
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+        <item>Year</item>
+    </string-array>
 </resources>
