@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.SearchView;
 import android.widget.Spinner;
 
@@ -37,6 +38,9 @@ public class Search extends AppCompatActivity {
 
     private User _user = null;
     private OkHttpClient _client;
+    private SearchView _bar;
+    private Spinner _sort;
+    private Spinner _window;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +52,12 @@ public class Search extends AppCompatActivity {
         assert tokensUrl != null;
         _user = new User(tokensUrl);
         _client = new OkHttpClient.Builder().build();
-        final SearchView bar = findViewById(R.id.search_bar);
-        bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        _bar = findViewById(R.id.search_bar);
+        _bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 displaySearch(query);
-                bar.clearFocus();
+                _bar.clearFocus();
                 return true;
             }
 
@@ -62,12 +66,27 @@ public class Search extends AppCompatActivity {
                 return false;
             }
         });
+        AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                CharSequence query = _bar.getQuery();
+                String q = query.toString();
+                if (!q.isEmpty()) {
+                    displaySearch(q);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        };
+        _sort = findViewById(R.id.search_sort);
+        _sort.setOnItemSelectedListener(listener);
+        _window = findViewById(R.id.search_window);
+        _window.setOnItemSelectedListener(listener);
     }
 
     protected void displaySearch(String query) {
-        Spinner sort = findViewById(R.id.search_sort);
-        Spinner window = findViewById(R.id.search_window);
-        String url = "https://api.imgur.com/3/gallery/search/" + sort.getSelectedItem().toString().toLowerCase() + "/" + window.getSelectedItem().toString().toLowerCase() + "/?q=" + query;
+        String url = "https://api.imgur.com/3/gallery/search/" + _sort.getSelectedItem().toString().toLowerCase() + "/" + _window.getSelectedItem().toString().toLowerCase() + "/?q=" + query;
         try {
             Request request = new Request.Builder().url(url)
                     .addHeader("Authorization", "Bearer " + _user.getAccessToken())
