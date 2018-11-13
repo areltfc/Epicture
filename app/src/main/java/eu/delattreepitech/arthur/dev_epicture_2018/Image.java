@@ -6,6 +6,9 @@ public class Image {
     private String _id;
     private String _name;
 
+    public Image() {}
+    public Image(JSONObject src) { this.fillFromJSON(src); }
+
     public String getId() { return _id; }
     public String getName() { return _name; }
 
