@@ -16,16 +16,21 @@ import android.view.ViewGroup;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import eu.delattreepitech.arthur.dev_epicture_2018.Image;
 import eu.delattreepitech.arthur.dev_epicture_2018.ImageViewHolder;
+import eu.delattreepitech.arthur.dev_epicture_2018.JsonToList;
 import eu.delattreepitech.arthur.dev_epicture_2018.R;
 import eu.delattreepitech.arthur.dev_epicture_2018.User;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -54,31 +59,27 @@ public class Home extends AppCompatActivity {
             Request request = new Request.Builder().url("https://api.imgur.com/3/gallery/hot/viral/")
                     .addHeader("Authorization", "Bearer " + _user.getAccessToken())
                     .build();
-            Response response = _client.newCall(request).execute();
-            if (!response.isSuccessful()) {
-                System.out.println("Request was not successful");
-            } else {
-                JSONObject obj = new JSONObject(response.body().string());
-                JSONArray data = obj.getJSONArray("data");
-                final List<Image> images = new ArrayList<Image>();
-                for (int i = 0; i < data.length(); i++) {
-                    JSONObject item = data.getJSONObject(i);
-                    Image image = new Image();
-                    if (item.getBoolean("is_album")) {
-                        image.setId(item.getString("cover"));
-                    } else {
-                        image.setId(item.getString("id"));
-                    }
-                    image.setName(item.getString("title"));
-                    images.add(image);
+            _client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    e.printStackTrace();
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        render(images);
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    try {
+                        final List<Image> images = JsonToList.Images(response.body().string());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                render(images);
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                });
-            }
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
