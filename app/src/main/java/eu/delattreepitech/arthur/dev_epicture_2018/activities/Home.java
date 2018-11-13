@@ -1,5 +1,7 @@
 package eu.delattreepitech.arthur.dev_epicture_2018.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
@@ -38,6 +40,7 @@ public class Home extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
         this.setContentView(R.layout.activity_main);
+
 
         String tokensUrl = Objects.requireNonNull(getIntent().getExtras()).getString("tokensUrl");
         assert tokensUrl != null;
@@ -114,15 +117,17 @@ public class Home extends AppCompatActivity {
         });
     }
 
-    public void onClickHome(MenuItem item) {
-        System.out.println(item);
-    }
+    public void onClickHome(MenuItem item) {}
 
     public void onClickProfile(MenuItem item) {
-        System.out.println(item);
+        final Intent profile = new Intent(Home.this, Profile.class);
+        profile.putExtra("tokensUrl", getIntent().getStringExtra("tokensUrl"));
+        startActivity(profile);
     }
 
     public void onClickSearch(MenuItem item) {
-        System.out.println(item);
+        final Intent search = new Intent(Home.this, Search.class);
+        search.putExtra("tokensUrl", getIntent().getStringExtra("tokensUrl"));
+        startActivity(search);
     }
 }

@@ -32,6 +32,9 @@
 
         <activity android:name=".activities.Profile" />
 
+        <activity android:name=".activities.Search" />
+
+
     </application>
 
 </manifest>

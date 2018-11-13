@@ -36,8 +36,8 @@ public class AuthWebViewClient extends WebViewClient {
     }
 
     private void accessGranted(String url) {
-        final Intent searchImage = new Intent(this.context, Home.class);
-        searchImage.putExtra("tokensUrl", url);
-        this.context.startActivity(searchImage);
+        final Intent home = new Intent(this.context, Home.class);
+        home.putExtra("tokensUrl", url);
+        this.context.startActivity(home);
     }
 }

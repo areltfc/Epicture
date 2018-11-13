@@ -1,5 +1,6 @@
 package eu.delattreepitech.arthur.dev_epicture_2018.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -29,14 +30,16 @@ public class Search extends AppCompatActivity {
     }
 
     public void onClickHome(MenuItem item) {
-        System.out.println(item);
+        final Intent home = new Intent(Search.this, Home.class);
+        home.putExtra("tokensUrl", getIntent().getStringExtra("tokensUrl"));
+        startActivity(home);
     }
 
     public void onClickProfile(MenuItem item) {
-        System.out.println(item);
+        final Intent home = new Intent(Search.this, Profile.class);
+        home.putExtra("tokensUrl", getIntent().getStringExtra("tokensUrl"));
+        startActivity(home);
     }
 
-    public void onClickSearch(MenuItem item) {
-        System.out.println(item);
-    }
+    public void onClickSearch(MenuItem item) {}
 }
