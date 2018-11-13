@@ -122,7 +122,11 @@ public class Profile extends AppCompatActivity {
         startActivity(home);
     }
 
-    public void onClickProfile(MenuItem item) {}
+    public void onClickProfile(MenuItem item) {
+        final Intent profile = new Intent(Profile.this, Profile.class);
+        profile.putExtra("tokensUrl", getIntent().getStringExtra("tokensUrl"));
+        startActivity(profile);
+    }
 
     public void onClickSearch(MenuItem item) {
         final Intent search = new Intent(Profile.this, Search.class);
