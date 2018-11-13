@@ -12,14 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -98,7 +96,11 @@ public class Profile extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(@NonNull ImageViewHolder imageViewHolder, int i) {
-                Picasso.get().load("https://i.imgur.com/" + images.get(i).getId() + ".jpg").into(imageViewHolder._image);
+                Glide.with(getBaseContext())
+                        .load("https://i.imgur.com/" + images.get(i).getId() + ".gif")
+                        .apply(new RequestOptions()
+                                .fitCenter())
+                        .into(imageViewHolder._image);
                 imageViewHolder._name.setText(images.get(i).getName());
             }
 

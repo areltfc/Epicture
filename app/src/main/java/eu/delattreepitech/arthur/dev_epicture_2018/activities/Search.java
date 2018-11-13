@@ -15,7 +15,8 @@ import android.widget.AdapterView;
 import android.widget.SearchView;
 import android.widget.Spinner;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import org.json.JSONException;
 
@@ -132,7 +133,11 @@ public class Search extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(@NonNull ImageViewHolder imageViewHolder, int i) {
-                Picasso.get().load("https://i.imgur.com/" + images.get(i).getId() + ".jpg").into(imageViewHolder._image);
+                Glide.with(getBaseContext())
+                        .load("https://i.imgur.com/" + images.get(i).getId() + ".gif")
+                        .apply(new RequestOptions()
+                                .fitCenter())
+                        .into(imageViewHolder._image);
                 imageViewHolder._name.setText(images.get(i).getName());
             }
 
