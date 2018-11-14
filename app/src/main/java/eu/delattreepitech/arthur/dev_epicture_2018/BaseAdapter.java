@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -17,12 +18,12 @@ import eu.delattreepitech.arthur.dev_epicture_2018.activities.Detailed;
 public class BaseAdapter extends RecyclerView.Adapter {
     private AppCompatActivity _context;
     private List<Image> _images;
-    private String _accessToken;
+    private User _user;
 
-    public BaseAdapter(AppCompatActivity context, List<Image> images, String accessToken) {
+    public BaseAdapter(AppCompatActivity context, List<Image> images, User user) {
         _context = context;
         _images = images;
-        _accessToken = accessToken;
+        _user = user;
     }
 
     @NonNull
@@ -51,7 +52,7 @@ public class BaseAdapter extends RecyclerView.Adapter {
                 final Intent detailed = new Intent(_context, Detailed.class);
                 detailed.putExtra("id", id);
                 detailed.putExtra("tokensUrl", _context.getIntent().getStringExtra("tokensUrl"));
-                detailed.putExtra("accessToken", _accessToken);
+                detailed.putExtra("user", new Gson().toJson(_user));
                 _context.startActivity(detailed);
             }
         };

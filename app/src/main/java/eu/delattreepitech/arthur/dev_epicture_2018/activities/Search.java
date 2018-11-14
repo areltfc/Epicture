@@ -17,6 +17,7 @@ import android.widget.Spinner;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 
@@ -50,9 +51,7 @@ public class Search extends AppCompatActivity {
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
         this.setContentView(R.layout.search_layout);
 
-        String tokensUrl = Objects.requireNonNull(getIntent().getExtras()).getString("tokensUrl");
-        assert tokensUrl != null;
-        _user = new User(tokensUrl);
+        _user = new Gson().fromJson(Objects.requireNonNull(getIntent().getExtras()).getString("user"), User.class);
         _client = new OkHttpClient.Builder().build();
         _bar = findViewById(R.id.search_bar);
         _bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -123,7 +122,7 @@ public class Search extends AppCompatActivity {
         RecyclerView v = findViewById(R.id.home_view);
         v.setLayoutManager(new LinearLayoutManager(this));
 
-        BaseAdapter adapter = new BaseAdapter(this, images, _user.getAccessToken());
+        BaseAdapter adapter = new BaseAdapter(this, images, _user);
         v.setAdapter(adapter);
         v.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -134,20 +133,20 @@ public class Search extends AppCompatActivity {
     }
 
     public void onClickHome(MenuItem item) {
-        final Intent home = new Intent(Search.this, Home.class);
-        home.putExtra("tokensUrl", getIntent().getStringExtra("tokensUrl"));
+        final Intent home = new Intent(this, Home.class);
+        home.putExtra("user", new Gson().toJson(_user));
         startActivity(home);
     }
 
     public void onClickProfile(MenuItem item) {
-        final Intent profile = new Intent(Search.this, Profile.class);
-        profile.putExtra("tokensUrl", getIntent().getStringExtra("tokensUrl"));
+        final Intent profile = new Intent(this, Profile.class);
+        profile.putExtra("user", new Gson().toJson(_user));
         startActivity(profile);
     }
 
     public void onClickSearch(MenuItem item) {
-        final Intent search = new Intent(Search.this, Search.class);
-        search.putExtra("tokensUrl", getIntent().getStringExtra("tokensUrl"));
+        final Intent search = new Intent(this, Search.class);
+        search.putExtra("user", new Gson().toJson(_user));
         startActivity(search);
     }
 }

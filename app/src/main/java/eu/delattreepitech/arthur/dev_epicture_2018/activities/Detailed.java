@@ -17,6 +17,7 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 
@@ -26,6 +27,7 @@ import java.util.Objects;
 import eu.delattreepitech.arthur.dev_epicture_2018.Image;
 import eu.delattreepitech.arthur.dev_epicture_2018.InterpretAPIRequest;
 import eu.delattreepitech.arthur.dev_epicture_2018.R;
+import eu.delattreepitech.arthur.dev_epicture_2018.User;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -34,7 +36,7 @@ import okhttp3.Response;
 
 public class Detailed extends AppCompatActivity {
     private OkHttpClient _client;
-    private String _accessToken;
+    private User _user;
     private String _imageId;
     private Image _image;
 
@@ -47,15 +49,14 @@ public class Detailed extends AppCompatActivity {
         _image = new Image();
         _imageId = Objects.requireNonNull(getIntent().getExtras()).getString("id");
         assert _imageId != null;
-        _accessToken = Objects.requireNonNull(getIntent().getExtras()).getString("accessToken");
-        assert _accessToken != null;
+        _user = new Gson().fromJson(Objects.requireNonNull(getIntent().getExtras()).getString("user"), User.class);
         _client = new OkHttpClient.Builder().build();
         displayImage();
     }
 
     private void displayImage() {
         final Request request = new Request.Builder().url("https://api.imgur.com/3/image/" + _imageId)
-                .addHeader("Authorization", "Bearer " + _accessToken).build();
+                .addHeader("Authorization", "Bearer " + _user.getAccessToken()).build();
         _client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
@@ -93,9 +94,7 @@ public class Detailed extends AppCompatActivity {
 
                     vv.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
-                        public void onPrepared(MediaPlayer mp) {
-                            mp.setLooping(true);
-                        }
+                        public void onPrepared(MediaPlayer mp) { mp.setLooping(true); }
                     });
                 } else {
                     ImageView iv = findViewById(R.id.image_detailed_view);
@@ -106,27 +105,27 @@ public class Detailed extends AppCompatActivity {
                             .into(iv);
                 }
                 ((TextView) findViewById(R.id.image_detailed_title)).setText(_image.getName());
-                ((TextView) findViewById(R.id.image_detailed_user)).setText(_image.getName());
+                ((TextView) findViewById(R.id.image_detailed_user)).setText(_image.getUser());
                 ((TextView) findViewById(R.id.image_detailed_tags)).setText(_image.getName());
             }
         });
     }
 
     public void onClickHome(MenuItem item) {
-        final Intent home = new Intent(Detailed.this, Home.class);
-        home.putExtra("tokensUrl", getIntent().getStringExtra("tokensUrl"));
+        final Intent home = new Intent(this, Home.class);
+        home.putExtra("user", new Gson().toJson(_user));
         startActivity(home);
     }
 
     public void onClickProfile(MenuItem item) {
-        final Intent profile = new Intent(Detailed.this, Profile.class);
-        profile.putExtra("tokensUrl", getIntent().getStringExtra("tokensUrl"));
+        final Intent profile = new Intent(this, Profile.class);
+        profile.putExtra("user", new Gson().toJson(_user));
         startActivity(profile);
     }
 
     public void onClickSearch(MenuItem item) {
-        final Intent search = new Intent(Detailed.this, Search.class);
-        search.putExtra("tokensUrl", getIntent().getStringExtra("tokensUrl"));
+        final Intent search = new Intent(this, Search.class);
+        search.putExtra("user", new Gson().toJson(_user));
         startActivity(search);
     }
 }

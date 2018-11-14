@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.google.gson.Gson;
+
 import eu.delattreepitech.arthur.dev_epicture_2018.activities.Home;
 import eu.delattreepitech.arthur.dev_epicture_2018.activities.MainActivity;
 
@@ -37,7 +39,7 @@ public class AuthWebViewClient extends WebViewClient {
 
     private void accessGranted(String url) {
         final Intent home = new Intent(this.context, Home.class);
-        home.putExtra("tokensUrl", url);
+        home.putExtra("user", new Gson().toJson(new User(url)));
         this.context.startActivity(home);
     }
 }
