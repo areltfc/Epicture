@@ -5,12 +5,14 @@ import org.json.JSONObject;
 public class Image {
     private String _id;
     private String _name;
+    private String _type;
 
     public Image() {}
     public Image(JSONObject src) { this.fillFromJSON(src); }
 
     public String getId() { return _id; }
     public String getName() { return _name; }
+    public String getType() { return _type; }
 
     public void setId(final String id) { _id = id; }
     public void setName(final String name) { _name = name; }
@@ -23,6 +25,12 @@ public class Image {
                 _id = src.getString("id");
             }
             _name = src.getString("title");
+            if (src.has("type")) {
+                String type = src.getString("type");
+                _type = type.substring(type.lastIndexOf("/") + 1);
+            } else {
+                _type = "jpeg";
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

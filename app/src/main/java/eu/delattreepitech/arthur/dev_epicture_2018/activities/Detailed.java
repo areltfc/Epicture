@@ -1,14 +1,19 @@
 package eu.delattreepitech.arthur.dev_epicture_2018.activities;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -73,12 +78,33 @@ public class Detailed extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                ImageView iv = findViewById(R.id.image_detailed_view);
-                Glide.with(getBaseContext())
-                        .load("https://i.imgur.com/" + _imageId + ".gif")
-                        .apply(new RequestOptions()
-                                .fitCenter())
-                        .into(iv);
+                if (_image.getType().equals("mp4")) {
+
+                    RelativeLayout layout = findViewById(R.id.image_detailed_layout);
+
+                    VideoView vv = new VideoView(getBaseContext());
+                    Uri uri = Uri.parse("https://i.imgur.com/" + _imageId + ".mp4");
+                    vv.setVideoURI(uri);
+                    vv.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                            FrameLayout.LayoutParams.WRAP_CONTENT));
+
+                    vv.start();
+                    layout.addView(vv);
+
+                    vv.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mp) {
+                            mp.setLooping(true);
+                        }
+                    });
+                } else {
+                    ImageView iv = findViewById(R.id.image_detailed_view);
+                    Glide.with(getBaseContext())
+                            .load("https://i.imgur.com/" + _imageId + ".gif")
+                            .apply(new RequestOptions()
+                                    .fitCenter())
+                            .into(iv);
+                }
                 ((TextView) findViewById(R.id.image_detailed_title)).setText(_image.getName());
                 ((TextView) findViewById(R.id.image_detailed_user)).setText(_image.getName());
                 ((TextView) findViewById(R.id.image_detailed_tags)).setText(_image.getName());
