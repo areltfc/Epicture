@@ -5,6 +5,7 @@
     <string name="navigation_home">Home</string>
     <string name="navigation_profile">Profile</string>
     <string name="navigation_search">Search</string>
+    <string name="image_account">by %1$s</string>
 
     <string-array name="search_sort_items">
         <item>Time</item>

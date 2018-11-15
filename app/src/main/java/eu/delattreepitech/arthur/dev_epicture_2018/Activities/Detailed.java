@@ -28,6 +28,7 @@ import eu.delattreepitech.arthur.dev_epicture_2018.Adapter.TagsAdapter;
 import eu.delattreepitech.arthur.dev_epicture_2018.Image;
 import eu.delattreepitech.arthur.dev_epicture_2018.InterpretAPIRequest;
 import eu.delattreepitech.arthur.dev_epicture_2018.R;
+import eu.delattreepitech.arthur.dev_epicture_2018.TextView.MontserratTextView;
 import eu.delattreepitech.arthur.dev_epicture_2018.User;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -51,9 +52,8 @@ public class Detailed extends AppCompatActivity {
         _user = new Gson().fromJson(Objects.requireNonNull(getIntent().getExtras()).getString("user"), User.class);
         _client = new OkHttpClient.Builder().build();
         displayAlbum();
-        TextView title = findViewById(R.id.album_name);
-        title.setTextColor(this.getColor(R.color.white));
-        title.setText(_cover.getName());
+        displayTitle();
+        displayAccount();
         //displayTags();
     }
 
@@ -105,7 +105,19 @@ public class Detailed extends AppCompatActivity {
         });
     }
 
-/*    private void displayTags() {
+    private void displayTitle() {
+        MontserratTextView title = findViewById(R.id.album_name);
+        title.setTextColor(this.getColor(R.color.white));
+        title.setText(_cover.getName());
+    }
+
+    private void displayAccount() {
+        MontserratTextView title = findViewById(R.id.album_account);
+        title.setTextColor(this.getColor(R.color.white));
+        title.setText(this.getString(R.string.image_account, _cover.getUser()));
+    }
+
+    /*    private void displayTags() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() { renderTags(); }

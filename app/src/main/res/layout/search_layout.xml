@@ -9,12 +9,14 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/search_layout_top">
+        android:id="@+id/search_layout_top"
+        android:background="@color/imgur_background">
 
         <SearchView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/search_bar" />
+            android:id="@+id/search_bar"
+            android:background="@android:color/white"/>
 
         <Spinner
             android:id="@+id/search_sort"
@@ -37,22 +39,22 @@
             android:popupBackground="@android:color/darker_gray"
             android:visibility="visible"/>
 
-    <android.support.v7.widget.RecyclerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/home_view"
-        android:background="@android:color/background_dark"
-        android:layout_below="@id/search_window"
-        />
+        <android.support.v7.widget.RecyclerView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/home_view"
+            android:background="@color/imgur_background"
+            android:layout_below="@id/search_window"
+            />
 
-    <FrameLayout
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_below="@id/search_window"
-        app:layout_constrainedWidth="true" />
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_below="@id/search_window"
+            app:layout_constrainedWidth="true" />
 
     </RelativeLayout>
 
