@@ -22,7 +22,7 @@
 
         </RelativeLayout>
 
-        <eu.delattreepitech.arthur.dev_epicture_2018.MontserratTextView
+        <eu.delattreepitech.arthur.dev_epicture_2018.TextView.MontserratTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/title"

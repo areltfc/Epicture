@@ -1,4 +1,4 @@
-package eu.delattreepitech.arthur.dev_epicture_2018;
+package eu.delattreepitech.arthur.dev_epicture_2018.WebView;
 
 import android.content.Intent;
 import android.webkit.WebView;
@@ -8,15 +8,17 @@ import com.google.gson.Gson;
 
 import eu.delattreepitech.arthur.dev_epicture_2018.Activities.Home;
 import eu.delattreepitech.arthur.dev_epicture_2018.Activities.MainActivity;
+import eu.delattreepitech.arthur.dev_epicture_2018.R;
+import eu.delattreepitech.arthur.dev_epicture_2018.User;
 
 public class AuthWebViewClient extends WebViewClient {
-    private MainActivity context;
-    private boolean stopRedirecting;
+    private MainActivity _context;
+    private boolean _stopRedirecting;
 
     public AuthWebViewClient(MainActivity context) {
         super();
-        this.context = context;
-        this.stopRedirecting = false;
+        _context = context;
+        _stopRedirecting = false;
     }
 
     @Override
@@ -26,20 +28,26 @@ public class AuthWebViewClient extends WebViewClient {
             return true;
         } else {
             if (url.contains("callback?error=access_denied")) {
-                this.context.setContentView(R.layout.access_denied);
+               accessDenied();
             } else {
-                if (!this.stopRedirecting) {
-                    this.stopRedirecting = true;
-                    this.accessGranted(url);
+                if (!_stopRedirecting) {
+                    _stopRedirecting = true;
+                    accessGranted(url);
                 }
             }
             return false;
         }
     }
 
+    private void accessDenied() {
+        Intent login = new Intent();
+        login.putExtra("denied", true);
+        _context.startActivity(login);
+    }
+
     private void accessGranted(String url) {
-        final Intent home = new Intent(this.context, Home.class);
+        final Intent home = new Intent(_context, Home.class);
         home.putExtra("user", new Gson().toJson(new User(url)));
-        this.context.startActivity(home);
+        _context.startActivity(home);
     }
 }

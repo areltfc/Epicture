@@ -1,4 +1,4 @@
-package eu.delattreepitech.arthur.dev_epicture_2018;
+package eu.delattreepitech.arthur.dev_epicture_2018.TextView;
 
 import android.content.Context;
 import android.graphics.Typeface;
