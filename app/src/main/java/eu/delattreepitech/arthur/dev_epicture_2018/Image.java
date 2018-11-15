@@ -13,6 +13,7 @@ public class Image {
     private String _name;
     private String _type;
     private String _user;
+    private boolean _favorite;
     private String _description;
     private List<String> _tags;
 
@@ -24,6 +25,7 @@ public class Image {
     public String getName() { return _name; }
     public String getType() { return _type; }
     public String getUser() { return _user; }
+    public boolean getFavorite() { return _favorite; }
     public String getDescription() { return _description; }
     public List<String> getTags() { return _tags; }
 
@@ -43,6 +45,7 @@ public class Image {
                 _type = "jpeg";
             }
             _user = src.getString("account_url");
+            _favorite = src.getBoolean("favorite");
             _description = src.getString("description");
             if (src.has("tags")) {
                 JSONArray tags = src.getJSONArray("tags");

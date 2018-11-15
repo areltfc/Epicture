@@ -25,8 +25,8 @@ public class TagsAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        TagViewHolder vh = new TagViewHolder(_context.getLayoutInflater().inflate(R.layout.album_tag_template, null));
-        vh._tag = vh.itemView.findViewById(R.id.album_tag_template_view);
+        TagViewHolder vh = new TagViewHolder(_context.getLayoutInflater().inflate(R.layout.album_tag, null));
+        vh._tag = vh.itemView.findViewById(R.id.text);
         return vh;
     }
 
@@ -34,6 +34,7 @@ public class TagsAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         TagViewHolder vh = (TagViewHolder) viewHolder;
         final String tag = _tags.get(i);
+        vh._tag.setTextColor(_context.getColor(R.color.white));
         vh._tag.setText(tag);
     }
 

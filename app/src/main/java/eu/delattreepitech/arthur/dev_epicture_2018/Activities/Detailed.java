@@ -11,19 +11,19 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import org.json.JSONException;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
 import eu.delattreepitech.arthur.dev_epicture_2018.Adapter.AlbumAdapter;
-import eu.delattreepitech.arthur.dev_epicture_2018.Adapter.BaseAdapter;
 import eu.delattreepitech.arthur.dev_epicture_2018.Adapter.TagsAdapter;
 import eu.delattreepitech.arthur.dev_epicture_2018.Image;
 import eu.delattreepitech.arthur.dev_epicture_2018.InterpretAPIRequest;
@@ -54,7 +54,18 @@ public class Detailed extends AppCompatActivity {
         displayAlbum();
         displayTitle();
         displayAccount();
-        //displayTags();
+        displayTags();
+        CheckBox favorite = findViewById(R.id.favorite);
+        favorite.setChecked(_cover.getFavorite());
+        if (favorite.isChecked()) {
+            favorite.setText(getString(R.string.remove_from_favorites));
+        } else {
+            favorite.setText(getString(R.string.add_to_favorites));
+        }
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { switchFavorite((CheckBox) v); }
+        });
     }
 
     private void displayAlbum() {
@@ -117,7 +128,7 @@ public class Detailed extends AppCompatActivity {
         title.setText(this.getString(R.string.image_account, _cover.getUser()));
     }
 
-    /*    private void displayTags() {
+    private void displayTags() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() { renderTags(); }
@@ -127,18 +138,55 @@ public class Detailed extends AppCompatActivity {
     private void renderTags() {
         RecyclerView v = findViewById(R.id.album_tags_view);
         v.setLayoutManager(new LinearLayoutManager(Detailed.this));
-        TagsAdapter adapter = new TagsAdapter(Detailed.this, _cover.getTags(), _user);
-        v.setAdapter(adapter);
+        v.setAdapter(new TagsAdapter(Detailed.this, _cover.getTags(), _user));
         v.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect,
                                        @NonNull View view,
                                        @NonNull RecyclerView parent,
                                        @NonNull RecyclerView.State state) {
-                outRect.right = 16;
+                outRect.bottom = 16;
             }
         });
-    }*/
+    }
+
+    private void switchFavorite(final CheckBox check) {
+        String endpoint;
+        if (_cover.getId().equals(_cover.getRealId())) {
+            endpoint = "https://api.imgur.com/3/image/" + _cover.getRealId() + "/favorite";
+        } else {
+            endpoint = "https://api.imgur.com/3/album/" + _cover.getRealId() + "/favorite";
+        }
+        System.out.println(endpoint);
+        final Request request = new Request.Builder().url(endpoint).addHeader("Authorization", "Bearer " + _user.getAccessToken()).build();
+        _client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) {
+                try {
+                    System.out.println(response.body().string());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (check.isChecked()) {
+                            check.setText(getString(R.string.add_to_favorites));
+                            Toast.makeText(getBaseContext(), "The image was added to your favorites", Toast.LENGTH_SHORT).show();
+                        } else {
+                            check.setText(getString(R.string.remove_from_favorites));
+                            Toast.makeText(getBaseContext(), "The image was removed from your favorites", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+    }
 
     public void onClickHome(MenuItem item) {
         final Intent home = new Intent(this, Home.class);

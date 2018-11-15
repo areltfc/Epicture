@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -35,7 +37,7 @@ public class AlbumAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        ImageViewHolder vh = new ImageViewHolder(_context.getLayoutInflater().inflate(R.layout.album_image_template, null));
+        ImageViewHolder vh = new ImageViewHolder(_context.getLayoutInflater().inflate(R.layout.album_image, null));
         vh._image = vh.itemView.findViewById(R.id.image);
         vh._text = vh.itemView.findViewById(R.id.text);
         return vh;
@@ -46,7 +48,8 @@ public class AlbumAdapter extends RecyclerView.Adapter {
         ImageViewHolder vh = (ImageViewHolder) viewHolder;
         final Image image = _album.get(i);
         if (image.getType().equals("mp4")) {
-            ConstraintLayout layout = _context.findViewById(R.id.album_constraint);
+            vh._image.setVisibility(View.GONE);
+            RelativeLayout layout = _context.findViewById(R.id.album_image_layout);
             VideoView vv = new VideoView(_context.getBaseContext());
             Uri uri = Uri.parse("https://i.imgur.com/" + image.getRealId() + ".mp4");
             vv.setVideoURI(uri);
