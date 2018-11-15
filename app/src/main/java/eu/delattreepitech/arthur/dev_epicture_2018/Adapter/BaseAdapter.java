@@ -1,4 +1,4 @@
-package eu.delattreepitech.arthur.dev_epicture_2018;
+package eu.delattreepitech.arthur.dev_epicture_2018.Adapter;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -13,7 +13,11 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import eu.delattreepitech.arthur.dev_epicture_2018.activities.Detailed;
+import eu.delattreepitech.arthur.dev_epicture_2018.Image;
+import eu.delattreepitech.arthur.dev_epicture_2018.ViewHolder.ImageViewHolder;
+import eu.delattreepitech.arthur.dev_epicture_2018.R;
+import eu.delattreepitech.arthur.dev_epicture_2018.User;
+import eu.delattreepitech.arthur.dev_epicture_2018.Activities.Detailed;
 
 public class BaseAdapter extends RecyclerView.Adapter {
     private AppCompatActivity _context;
@@ -29,7 +33,7 @@ public class BaseAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        ImageViewHolder vh = new ImageViewHolder(_context.getLayoutInflater().inflate(R.layout.home_view_item, null));
+        ImageViewHolder vh = new ImageViewHolder(_context.getLayoutInflater().inflate(R.layout.image, null));
         vh._image = vh.itemView.findViewById(R.id.photo);
         vh._name = vh.itemView.findViewById(R.id.title);
         return vh;
@@ -38,24 +42,23 @@ public class BaseAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         ImageViewHolder imageViewHolder = (ImageViewHolder) viewHolder;
-        final String id = _images.get(i).getId();
-        imageViewHolder._name.setText(_images.get(i).getName());
-        Glide.with(_context)
-                .load("https://i.imgur.com/" + _images.get(i).getId() + ".gif")
-                .apply(new RequestOptions()
-                        .fitCenter())
-                .into(imageViewHolder._image);
-        imageViewHolder._name.setText(_images.get(i).getName());
+        final Image image = _images.get(i);
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Intent detailed = new Intent(_context, Detailed.class);
-                detailed.putExtra("id", id);
-                detailed.putExtra("tokensUrl", _context.getIntent().getStringExtra("tokensUrl"));
+                detailed.putExtra("image", new Gson().toJson(image));
                 detailed.putExtra("user", new Gson().toJson(_user));
                 _context.startActivity(detailed);
             }
         };
+        imageViewHolder._name.setText(Image.cropName(image.getName()));
+        imageViewHolder._name.setTextColor(_context.getColor(R.color.white));
+        Glide.with(_context)
+                .load("https://i.imgur.com/" + image.getId() + ".gif")
+                .apply(new RequestOptions()
+                        .fitCenter())
+                .into(imageViewHolder._image);
         imageViewHolder._image.setOnClickListener(listener);
         imageViewHolder._name.setOnClickListener(listener);
     }

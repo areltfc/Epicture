@@ -1,4 +1,4 @@
-package eu.delattreepitech.arthur.dev_epicture_2018.activities;
+package eu.delattreepitech.arthur.dev_epicture_2018.Activities;
 
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;

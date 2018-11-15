@@ -21,4 +21,8 @@ public class InterpretAPIRequest {
     public static Image JSONToImage(String requestBody) throws JSONException {
         return new Image(new JSONObject(requestBody).getJSONObject("data"));
     }
+
+    public static List<Image> JSONToAlbum(String requestBody) throws JSONException {
+        return Image.createListFromJSON(new JSONObject(requestBody).getJSONObject("data"));
+    }
 }

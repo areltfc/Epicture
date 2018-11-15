@@ -9,6 +9,7 @@ import java.util.List;
 
 public class Image {
     private String _id;
+    private String _realId;
     private String _name;
     private String _type;
     private String _user;
@@ -18,6 +19,7 @@ public class Image {
     public Image(JSONObject src) { _tags = new ArrayList<>(); this.fillFromJSON(src); }
 
     public String getId() { return _id; }
+    public String getRealId() { return _realId; }
     public String getName() { return _name; }
     public String getType() { return _type; }
     public String getUser() { return _user; }
@@ -25,6 +27,7 @@ public class Image {
 
     public void fillFromJSON(final JSONObject src) {
         try {
+            _realId = src.getString("id");
             if (src.has("is_album") && src.getBoolean("is_album")) {
                 _id = src.getString("cover");
             } else {
@@ -44,16 +47,16 @@ public class Image {
                     _tags.add(tags.getJSONObject(i).getString("display_name"));
                 }
             }
+            this.purify();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        this.purify();
     }
 
     static public List<Image> createListFromJSON(final JSONObject src) throws JSONException {
         List<Image> list = new ArrayList<>();
-        if (src.has("is_album") && src.getBoolean("is_album")) {
-            JSONArray holder = new JSONArray(src.getJSONArray("images"));
+        if (src.has("is_album") && src.getBoolean("is_album") && src.getInt("images_count") > 1) {
+            JSONArray holder = src.getJSONArray("images");
             for (int i  = 0; i < holder.length(); i++) {
                 list.add(new Image(holder.getJSONObject(i)));
             }
@@ -66,8 +69,14 @@ public class Image {
     private void purify() {
         if (_name.equals("null")) {
             _name = "(Untitled picture)";
-        } else if (_name.length() > 40) {
-            _name = _name.substring(0, 37) + "...";
+        }
+    }
+
+    static public String cropName(String name) {
+        if (name.length() > 40) {
+            return name.substring(0, 37) + "...";
+        } else {
+            return name;
         }
     }
 }

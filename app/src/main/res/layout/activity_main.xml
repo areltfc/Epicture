@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/home_view"
-        android:background="@android:color/background_dark" />
+        android:background="@color/imgur_background" />
 
     <FrameLayout
         android:id="@+id/container"
