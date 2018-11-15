@@ -35,7 +35,7 @@ public class BaseAdapter extends RecyclerView.Adapter {
     public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         ImageViewHolder vh = new ImageViewHolder(_context.getLayoutInflater().inflate(R.layout.image, null));
         vh._image = vh.itemView.findViewById(R.id.photo);
-        vh._name = vh.itemView.findViewById(R.id.title);
+        vh._text = vh.itemView.findViewById(R.id.title);
         return vh;
     }
 
@@ -52,15 +52,15 @@ public class BaseAdapter extends RecyclerView.Adapter {
                 _context.startActivity(detailed);
             }
         };
-        imageViewHolder._name.setText(Image.cropName(image.getName()));
-        imageViewHolder._name.setTextColor(_context.getColor(R.color.white));
+        imageViewHolder._text.setText(Image.cropName(image.getName()));
+        imageViewHolder._text.setTextColor(_context.getColor(R.color.white));
         Glide.with(_context)
                 .load("https://i.imgur.com/" + image.getId() + ".gif")
                 .apply(new RequestOptions()
                         .fitCenter())
                 .into(imageViewHolder._image);
         imageViewHolder._image.setOnClickListener(listener);
-        imageViewHolder._name.setOnClickListener(listener);
+        imageViewHolder._text.setOnClickListener(listener);
     }
 
     @Override

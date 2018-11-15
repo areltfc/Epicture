@@ -13,19 +13,21 @@ public class Image {
     private String _name;
     private String _type;
     private String _user;
+    private String _description;
     private List<String> _tags;
 
     public Image() { _tags = new ArrayList<>(); }
-    public Image(JSONObject src) { _tags = new ArrayList<>(); this.fillFromJSON(src); }
+    Image(JSONObject src) { _tags = new ArrayList<>(); this.fillFromJSON(src); }
 
     public String getId() { return _id; }
     public String getRealId() { return _realId; }
     public String getName() { return _name; }
     public String getType() { return _type; }
     public String getUser() { return _user; }
+    public String getDescription() { return _description; }
     public List<String> getTags() { return _tags; }
 
-    public void fillFromJSON(final JSONObject src) {
+    private void fillFromJSON(final JSONObject src) {
         try {
             _realId = src.getString("id");
             if (src.has("is_album") && src.getBoolean("is_album")) {
@@ -41,6 +43,7 @@ public class Image {
                 _type = "jpeg";
             }
             _user = src.getString("account_url");
+            _description = src.getString("description");
             if (src.has("tags")) {
                 JSONArray tags = src.getJSONArray("tags");
                 for (int i = 0; i < tags.length(); i++) {
@@ -53,7 +56,7 @@ public class Image {
         }
     }
 
-    static public List<Image> createListFromJSON(final JSONObject src) throws JSONException {
+    static List<Image> createListFromJSON(final JSONObject src) throws JSONException {
         List<Image> list = new ArrayList<>();
         if (src.has("is_album") && src.getBoolean("is_album") && src.getInt("images_count") > 1) {
             JSONArray holder = src.getJSONArray("images");

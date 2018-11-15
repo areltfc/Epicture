@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.VideoView;
@@ -35,7 +36,8 @@ public class AlbumAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         ImageViewHolder vh = new ImageViewHolder(_context.getLayoutInflater().inflate(R.layout.album_image_template, null));
-        vh._image = vh.itemView.findViewById(R.id.album_image_template_view);
+        vh._image = vh.itemView.findViewById(R.id.image);
+        vh._text = vh.itemView.findViewById(R.id.text);
         return vh;
     }
 
@@ -61,6 +63,12 @@ public class AlbumAdapter extends RecyclerView.Adapter {
                     .apply(new RequestOptions()
                             .fitCenter())
                     .into(vh._image);
+        }
+        if (image.getDescription().equals("null")) {
+            vh._text.setVisibility(View.GONE);
+        } else {
+            vh._text.setTextColor(_context.getColor(R.color.white));
+            vh._text.setText(image.getDescription());
         }
     }
 

@@ -9,7 +9,7 @@ import eu.delattreepitech.arthur.dev_epicture_2018.TextView.MontserratTextView;
 
 public class ImageViewHolder extends RecyclerView.ViewHolder {
     public ImageView _image;
-    public MontserratTextView _name;
+    public MontserratTextView _text;
 
     public ImageViewHolder(View itemView) {
         super(itemView);

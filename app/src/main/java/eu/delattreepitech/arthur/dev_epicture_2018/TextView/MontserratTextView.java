@@ -7,15 +7,21 @@ import android.util.AttributeSet;
 public class MontserratTextView extends android.support.v7.widget.AppCompatTextView {
     public MontserratTextView(Context context) {
         super(context);
+        work();
     }
 
     public MontserratTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setFont();
+        work();
     }
     public MontserratTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        work();
+    }
+
+    private void work() {
         setFont();
+        setTextIsSelectable(true);
     }
 
     private void setFont() {
