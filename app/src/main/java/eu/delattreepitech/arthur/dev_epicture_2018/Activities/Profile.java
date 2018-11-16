@@ -37,12 +37,6 @@ public class Profile extends AppCompatActivity {
         setupViewPager(_viewPager);
         TabLayout tabLayout = findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(_viewPager);
-        displayAccountName();
-    }
-
-    private void displayAccountName() {
-        MontserratTextView name = findViewById(R.id.account_name);
-        name.setText(_user.getAccountUsername());
     }
 
     private void setupViewPager(ViewPager viewPager) {

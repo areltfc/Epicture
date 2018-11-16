@@ -39,9 +39,13 @@ public class ProfileImagesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         _client = new OkHttpClient.Builder().build();
         _user = new Gson().fromJson(Objects.requireNonNull(getArguments()).getString("user"), User.class);
-        View root = inflater.inflate(R.layout.profile_images_fragment, container, false);
-        displayImages(root);
-        return root;
+        return inflater.inflate(R.layout.profile_images_fragment, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        displayImages(view);
     }
 
     private void displayImages(final View root) {
@@ -89,6 +93,11 @@ public class ProfileImagesFragment extends Fragment {
                 outRect.left = 16;
             }
         });
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 
     public static ProfileImagesFragment newInstance(User user) {

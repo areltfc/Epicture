@@ -4,46 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/imgur_background">
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/imgur_background">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@color/imgur_background"
-                android:id="@+id/profile_textviews"
-                android:scrollbars = "vertical"
-                android:orientation="vertical">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/imgur_background">
-                    <eu.delattreepitech.arthur.dev_epicture_2018.TextView.MontserratTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/account_name"
-                        android:textAppearance="@android:style/TextAppearance.Medium"
-                        android:textColor="@color/white"
-                        android:padding="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:textAlignment="center"
-                        android:background="@color/imgur_foreground" />
-                </RelativeLayout>
-            </LinearLayout>
             <android.support.design.widget.CoordinatorLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
-                android:layout_below="@id/profile_textviews"
-                android:id="@+id/profile_coordinatorlayout"
-                tools:context="eu.delattreepitech.arthur.dev_epicture_2018.Activities.Profile">
+                android:id="@+id/profile_coordinatorlayout">
                 <android.support.design.widget.AppBarLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -60,7 +30,6 @@
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
             </android.support.design.widget.CoordinatorLayout>
         </RelativeLayout>
-    </android.support.v4.widget.NestedScrollView>
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigationView"
         android:layout_width="0dp"

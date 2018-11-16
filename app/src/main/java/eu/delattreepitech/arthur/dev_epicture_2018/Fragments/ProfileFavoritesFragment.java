@@ -39,9 +39,13 @@ public class ProfileFavoritesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         _client = new OkHttpClient.Builder().build();
         _user = new Gson().fromJson(Objects.requireNonNull(getArguments()).getString("user"), User.class);
-        View root = inflater.inflate(R.layout.profile_favorites_fragment, container, false);
-        displayFavorites(root);
-        return root;
+        return inflater.inflate(R.layout.profile_favorites_fragment, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        displayFavorites(view);
     }
 
     private void displayFavorites(final View root) {
