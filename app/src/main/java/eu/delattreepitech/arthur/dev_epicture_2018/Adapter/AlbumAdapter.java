@@ -47,7 +47,7 @@ public class AlbumAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         ImageViewHolder vh = (ImageViewHolder) viewHolder;
         final Image image = _album.get(i);
-        if (image.getType().equals("mp4")) {
+        if (image.getType() != null && image.getType().equals("mp4")) {
             vh._image.setVisibility(View.GONE);
             RelativeLayout layout = _context.findViewById(R.id.album_image_layout);
             VideoView vv = new VideoView(_context.getBaseContext());

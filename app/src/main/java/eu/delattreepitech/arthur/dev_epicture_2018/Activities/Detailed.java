@@ -11,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
@@ -48,7 +47,7 @@ public class Detailed extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
-        this.setContentView(R.layout.album);
+        this.setContentView(R.layout.album_layout);
 
         _cover = new Gson().fromJson(Objects.requireNonNull(getIntent().getExtras()).getString("image"), Image.class);
         _user = new Gson().fromJson(Objects.requireNonNull(getIntent().getExtras()).getString("user"), User.class);
@@ -87,7 +86,7 @@ public class Detailed extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 try {
-                    _album = InterpretAPIRequest.JSONToAlbum(response.body().string());
+                    _album = InterpretAPIRequest.JSONToAlbum(Objects.requireNonNull(response.body()).string());
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() { renderAlbum(); }
@@ -120,13 +119,11 @@ public class Detailed extends AppCompatActivity {
 
     private void displayTitle() {
         MontserratTextView title = findViewById(R.id.album_name);
-        title.setTextColor(this.getColor(R.color.white));
         title.setText(_cover.getName());
     }
 
     private void displayAccount() {
         MontserratTextView title = findViewById(R.id.album_account);
-        title.setTextColor(this.getColor(R.color.white));
         title.setText(this.getString(R.string.image_account, _cover.getUser()));
     }
 
@@ -164,12 +161,22 @@ public class Detailed extends AppCompatActivity {
         _client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Toast.makeText(getBaseContext(), "A network error occurred, please try again later", Toast.LENGTH_SHORT).show();
-                check.setChecked(!check.isChecked());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getBaseContext(), "A network error occurred, please try again later", Toast.LENGTH_SHORT).show();
+                        check.setChecked(!check.isChecked());
+                    }
+                });
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
+                try {
+                    System.out.println(response.body().string());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

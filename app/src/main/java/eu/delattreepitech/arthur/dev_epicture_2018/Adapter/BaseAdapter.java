@@ -1,5 +1,6 @@
 package eu.delattreepitech.arthur.dev_epicture_2018.Adapter;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,11 +21,11 @@ import eu.delattreepitech.arthur.dev_epicture_2018.User;
 import eu.delattreepitech.arthur.dev_epicture_2018.Activities.Detailed;
 
 public class BaseAdapter extends RecyclerView.Adapter {
-    private AppCompatActivity _context;
+    private Activity _context;
     private List<Image> _images;
     private User _user;
 
-    public BaseAdapter(AppCompatActivity context, List<Image> images, User user) {
+    public BaseAdapter(Activity context, List<Image> images, User user) {
         _context = context;
         _images = images;
         _user = user;

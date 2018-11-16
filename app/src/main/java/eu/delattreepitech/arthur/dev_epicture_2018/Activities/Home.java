@@ -39,7 +39,7 @@ public class Home extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitAll().build());
-        this.setContentView(R.layout.activity_main);
+        this.setContentView(R.layout.home_layout);
 
         _user = new Gson().fromJson(Objects.requireNonNull(getIntent().getExtras()).getString("user"), User.class);
         _client = new OkHttpClient.Builder().build();
