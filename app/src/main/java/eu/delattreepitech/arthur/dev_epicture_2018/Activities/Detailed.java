@@ -32,8 +32,10 @@ import eu.delattreepitech.arthur.dev_epicture_2018.TextView.MontserratTextView;
 import eu.delattreepitech.arthur.dev_epicture_2018.User;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Detailed extends AppCompatActivity {
@@ -157,21 +159,17 @@ public class Detailed extends AppCompatActivity {
         } else {
             endpoint = "https://api.imgur.com/3/album/" + _cover.getRealId() + "/favorite";
         }
-        System.out.println(endpoint);
-        final Request request = new Request.Builder().url(endpoint).addHeader("Authorization", "Bearer " + _user.getAccessToken()).build();
+        final RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("title", _cover.getName()).build();
+        final Request request = new Request.Builder().url(endpoint).addHeader("Authorization", "Bearer " + _user.getAccessToken()).post(body).build();
         _client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                e.printStackTrace();
+                Toast.makeText(getBaseContext(), "A network error occurred, please try again later", Toast.LENGTH_SHORT).show();
+                check.setChecked(!check.isChecked());
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
-                try {
-                    System.out.println(response.body().string());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
