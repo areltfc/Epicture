@@ -48,7 +48,7 @@
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/home_view"
+            android:id="@+id/search_view"
             android:background="@color/imgur_background"
             android:layout_below="@id/search_window"
             />

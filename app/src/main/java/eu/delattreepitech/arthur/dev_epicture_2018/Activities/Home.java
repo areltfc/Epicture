@@ -34,7 +34,7 @@ import okhttp3.Response;
 
 public class Home extends AppCompatActivity {
 
-    private User _user = null;
+    private User _user;
     private OkHttpClient _client;
     private RecyclerView _rv;
     private List<Image> _images;
@@ -80,7 +80,7 @@ public class Home extends AppCompatActivity {
     private void displayHome(final int pageNumber) {
         try {
             String requestUrl = "https://api.imgur.com/3/gallery/hot/viral/" + pageNumber;
-            Request request = new Request.Builder().url(requestUrl)
+            final Request request = new Request.Builder().url(requestUrl)
                     .addHeader("Authorization", "Bearer " + _user.getAccessToken())
                     .build();
             _client.newCall(request).enqueue(new Callback() {
@@ -95,14 +95,7 @@ public class Home extends AppCompatActivity {
                         _images.addAll(InterpretAPIRequest.JSONToImages(response.body().string()));
                         runOnUiThread(new Runnable() {
                             @Override
-                            public void run() {
-                                if (_adapter == null) {
-                                    _adapter = new BaseAdapter(Home.this, _images, _user);
-                                    _rv.setAdapter(_adapter);
-                                } else {
-                                    _adapter.notifyDataSetChanged();
-                                }
-                            }
+                            public void run() { render(); }
                         });
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -111,6 +104,15 @@ public class Home extends AppCompatActivity {
             });
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void render() {
+        if (_adapter == null) {
+            _adapter = new BaseAdapter(Home.this, _images, _user);
+            _rv.setAdapter(_adapter);
+        } else {
+            _adapter.notifyDataSetChanged();
         }
     }
 

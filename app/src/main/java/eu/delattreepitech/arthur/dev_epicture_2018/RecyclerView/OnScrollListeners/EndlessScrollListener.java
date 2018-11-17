@@ -45,6 +45,12 @@ public class EndlessScrollListener extends RecyclerView.OnScrollListener {
         }
     }
 
+    public void reset() {
+        _isLoading = false;
+        _hasMorePages = true;
+        _pageNumber = 0;
+    }
+
     public void noMorePages() {
         this._hasMorePages = false;
     }

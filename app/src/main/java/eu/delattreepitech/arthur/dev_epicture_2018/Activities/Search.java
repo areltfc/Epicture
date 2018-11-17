@@ -19,10 +19,12 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import eu.delattreepitech.arthur.dev_epicture_2018.Adapters.BaseAdapter;
+import eu.delattreepitech.arthur.dev_epicture_2018.RecyclerView.OnScrollListeners.EndlessScrollListener;
 import eu.delattreepitech.arthur.dev_epicture_2018.Types.Image;
 import eu.delattreepitech.arthur.dev_epicture_2018.RequestUtils.InterpretAPIRequest;
 import eu.delattreepitech.arthur.dev_epicture_2018.R;
@@ -34,12 +36,17 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class Search extends AppCompatActivity {
-
     private User _user = null;
     private OkHttpClient _client;
     private SearchView _bar;
     private Spinner _sort;
     private Spinner _window;
+    private boolean _spinnerUpdate;
+    private RecyclerView _rv;
+    private EndlessScrollListener _endlessScrollListener;
+    private BaseAdapter _adapter;
+    private int _pageNumber = 0;
+    private List<Image> _images;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +56,54 @@ public class Search extends AppCompatActivity {
 
         _user = new Gson().fromJson(Objects.requireNonNull(getIntent().getExtras()).getString("user"), User.class);
         _client = new OkHttpClient.Builder().build();
+        _images = new ArrayList<>();
+
+        setupEndlessScrollListener();
+        setupRecyclerView();
+        setupSearchBar();
+        setupSpinners();
+    }
+
+    private void setupEndlessScrollListener() {
+        _endlessScrollListener = new EndlessScrollListener(new EndlessScrollListener.RefreshList() {
+            @Override
+            public void onRefresh(int pageNumber, EndlessScrollListener listener) {
+                _pageNumber = pageNumber + 1;
+                listener.notifyMorePages();
+                displaySearch();
+            }
+        });
+    }
+
+    private void setupRecyclerView() {
+        _rv = findViewById(R.id.search_view);
+
+        _rv.setLayoutManager(new LinearLayoutManager(this));
+        _rv.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect,
+                                       @NonNull View view,
+                                       @NonNull RecyclerView parent,
+                                       @NonNull RecyclerView.State state) {
+                outRect.top = 16;
+                outRect.bottom = 16;
+                outRect.right = 16;
+                outRect.left = 16;
+            }
+        });
+        _rv.addOnScrollListener(_endlessScrollListener);
+    }
+
+    private void setupSearchBar() {
         _bar = findViewById(R.id.search_bar);
+
         _bar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                displaySearch(query);
                 _bar.clearFocus();
+                _pageNumber = 0;
+                _endlessScrollListener.reset();
+                displaySearch();
                 return true;
             }
 
@@ -63,27 +112,34 @@ public class Search extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    private void setupSpinners() {
+        _sort = findViewById(R.id.search_sort);
+        _window = findViewById(R.id.search_window);
+        _spinnerUpdate = false;
+
         AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                CharSequence query = _bar.getQuery();
-                String q = query.toString();
-                if (!q.isEmpty()) {
-                    displaySearch(q);
+                if (!_bar.getQuery().toString().isEmpty()) {
+                    _spinnerUpdate = true;
+                    _pageNumber = 0;
+                    _endlessScrollListener.reset();
+                    displaySearch();
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         };
-        _sort = findViewById(R.id.search_sort);
         _sort.setOnItemSelectedListener(listener);
-        _window = findViewById(R.id.search_window);
         _window.setOnItemSelectedListener(listener);
     }
 
-    protected void displaySearch(String query) {
-        String url = "https://api.imgur.com/3/gallery/search/" + _sort.getSelectedItem().toString().toLowerCase() + "/" + _window.getSelectedItem().toString().toLowerCase() + "/?q=" + query;
+    private void displaySearch() {
+        String url = "https://api.imgur.com/3/gallery/search/" + _sort.getSelectedItem().toString().toLowerCase()
+                + "/" + _window.getSelectedItem().toString().toLowerCase() + "/" + _pageNumber + "/?q=" + _bar.getQuery().toString();
         try {
             Request request = new Request.Builder().url(url)
                     .addHeader("Authorization", "Bearer " + _user.getAccessToken())
@@ -97,11 +153,14 @@ public class Search extends AppCompatActivity {
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     try {
-                        final List<Image> images = InterpretAPIRequest.JSONToImages(response.body().string());
+                        if (_spinnerUpdate) {
+                            _images = new ArrayList<>();
+                        }
+                        _images.addAll(InterpretAPIRequest.JSONToImages(Objects.requireNonNull(response.body()).string()));
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                render(images);
+                                render();
                             }
                         });
                     } catch (JSONException e) {
@@ -114,21 +173,14 @@ public class Search extends AppCompatActivity {
         }
     }
 
-    private void render(final List<Image> images) {
-        RecyclerView v = findViewById(R.id.home_view);
-        v.setLayoutManager(new LinearLayoutManager(this));
-
-        BaseAdapter adapter = new BaseAdapter(this, images, _user);
-        v.setAdapter(adapter);
-        v.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                outRect.top = 16;
-                outRect.bottom = 16;
-                outRect.right = 16;
-                outRect.left = 16;
-            }
-        });
+    private void render() {
+        if (_adapter == null || _spinnerUpdate) {
+            _spinnerUpdate = false;
+            _adapter = new BaseAdapter(Search.this, _images, _user);
+            _rv.setAdapter(_adapter);
+        } else {
+            _adapter.notifyDataSetChanged();
+        }
     }
 
     public void onClickHome(MenuItem item) {
