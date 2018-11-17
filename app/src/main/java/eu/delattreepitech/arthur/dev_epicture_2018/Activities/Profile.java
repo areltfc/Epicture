@@ -1,15 +1,21 @@
 package eu.delattreepitech.arthur.dev_epicture_2018.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Objects;
 
 import eu.delattreepitech.arthur.dev_epicture_2018.Fragments.ProfileFavoritesFragment;
@@ -43,6 +49,11 @@ public class Profile extends AppCompatActivity {
         _sectionsPageAdapter.addFragment(ProfileImagesFragment.newInstance(_user), "Posts");
         _sectionsPageAdapter.addFragment(ProfileFavoritesFragment.newInstance(_user), "Favorites");
         viewPager.setAdapter(_sectionsPageAdapter);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     public void onClickHome(MenuItem item) {
