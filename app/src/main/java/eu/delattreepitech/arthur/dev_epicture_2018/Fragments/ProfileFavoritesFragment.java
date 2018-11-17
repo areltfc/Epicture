@@ -7,19 +7,24 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.locks.Lock;
 
 import eu.delattreepitech.arthur.dev_epicture_2018.Adapters.BaseAdapter;
+import eu.delattreepitech.arthur.dev_epicture_2018.RecyclerView.OnScrollListeners.EndlessScrollListener;
 import eu.delattreepitech.arthur.dev_epicture_2018.Types.Image;
 import eu.delattreepitech.arthur.dev_epicture_2018.RequestUtils.InterpretAPIRequest;
 import eu.delattreepitech.arthur.dev_epicture_2018.R;
@@ -33,6 +38,12 @@ import okhttp3.Response;
 public class ProfileFavoritesFragment extends Fragment {
     OkHttpClient _client;
     User _user;
+    List<Image> _images;
+    int _pageNumber;
+    View _root;
+    RecyclerView _rv;
+    EndlessScrollListener _endlessScrollListener;
+    BaseAdapter _adapter;
 
     @Nullable
     @Override
@@ -45,30 +56,74 @@ public class ProfileFavoritesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        displayFavorites(view);
+
+        _images = new ArrayList<>();
+        _pageNumber = 0;
+        _root = view;
+
+        setupEndlessScrollListener();
+        setupRecyclerView();
+        displayFavorites();
     }
 
-    private void displayFavorites(final View root) {
+    void setupEndlessScrollListener() {
+        _endlessScrollListener = new EndlessScrollListener(new EndlessScrollListener.RefreshList() {
+            @Override
+            public void onRefresh(int pageNumber, EndlessScrollListener listener) {
+                _pageNumber = pageNumber + 1;
+                displayFavorites();
+                listener.notifyMorePages();
+            }
+        });
+    }
+
+    void setupRecyclerView() {
+        _rv = _root.findViewById(R.id.recyclerview);
+
+        _rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        _rv.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                outRect.top = 16;
+                outRect.bottom = 16;
+                outRect.right = 16;
+                outRect.left = 16;
+            }
+        });
+        _rv.addOnScrollListener(_endlessScrollListener);
+    }
+
+    void displayFavorites() {
         try {
-            Request request = new Request.Builder().url("https://api.imgur.com/3/account/" + _user.getAccountUsername() + "/favorites/")
+            Request request = new Request.Builder().url("https://api.imgur.com/3/account/" + _user.getAccountUsername() + "/favorites/" + _pageNumber)
                     .addHeader("Authorization", "Bearer " + _user.getAccessToken())
                     .build();
             _client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    e.printStackTrace();
+                    Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(), "A network error occurred", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 }
 
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     try {
-                        final List<Image> images = InterpretAPIRequest.JSONToImages(Objects.requireNonNull(response.body()).string());
-                        Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                render(root, images);
-                            }
-                        });
+                        final List<Image> additions = InterpretAPIRequest.JSONToImages(Objects.requireNonNull(response.body()).string());
+                        if (additions.size() > 0) {
+                            _images.addAll(additions);
+                            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    render();
+                                }
+                            });
+                        } else {
+                            _endlessScrollListener.noMorePages();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -79,20 +134,13 @@ public class ProfileFavoritesFragment extends Fragment {
         }
     }
 
-    private void render(final View root, final List<Image> images) {
-        RecyclerView v = root.findViewById(R.id.recyclerview);
-        v.setLayoutManager(new LinearLayoutManager(getActivity()));
-        BaseAdapter adapter = new BaseAdapter(getActivity(), images, _user);
-        v.setAdapter(adapter);
-        v.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                outRect.top = 16;
-                outRect.bottom = 16;
-                outRect.right = 16;
-                outRect.left = 16;
-            }
-        });
+    void render() {
+        if (_adapter == null) {
+            _adapter = new BaseAdapter(getActivity(), _images, _user);
+            _rv.setAdapter(_adapter);
+        } else {
+            _adapter.notifyDataSetChanged();
+        }
     }
 
     public static ProfileFavoritesFragment newInstance(User user) {

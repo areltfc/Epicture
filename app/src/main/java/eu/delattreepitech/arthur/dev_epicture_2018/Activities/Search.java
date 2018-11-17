@@ -156,13 +156,18 @@ public class Search extends AppCompatActivity {
                         if (_spinnerUpdate) {
                             _images = new ArrayList<>();
                         }
-                        _images.addAll(InterpretAPIRequest.JSONToImages(Objects.requireNonNull(response.body()).string()));
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                render();
-                            }
-                        });
+                        final List<Image> additions = InterpretAPIRequest.JSONToImages(Objects.requireNonNull(response.body()).string());
+                        if (additions.size() > 0) {
+                            _images.addAll(additions);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    render();
+                                }
+                            });
+                        } else {
+                            _endlessScrollListener.noMorePages();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

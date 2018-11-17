@@ -33,12 +33,13 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class Home extends AppCompatActivity {
-
-    private User _user;
-    private OkHttpClient _client;
-    private RecyclerView _rv;
-    private List<Image> _images;
-    private BaseAdapter _adapter;
+    User _user;
+    OkHttpClient _client;
+    List<Image> _images;
+    int _pageNumber;
+    RecyclerView _rv;
+    EndlessScrollListener _endlessScrollListener;
+    BaseAdapter _adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +50,27 @@ public class Home extends AppCompatActivity {
         _user = new Gson().fromJson(Objects.requireNonNull(getIntent().getExtras()).getString("user"), User.class);
         _client = new OkHttpClient.Builder().build();
         _images = new ArrayList<>();
-        displayHome(0);
+        _pageNumber = 0;
+
+        setupEndlessScrollListener();
         setupRecyclerView();
+        displayHome();
     }
 
-    private void setupRecyclerView() {
+    void setupEndlessScrollListener() {
+        _endlessScrollListener = new EndlessScrollListener(new EndlessScrollListener.RefreshList() {
+            @Override
+            public void onRefresh(int pageNumber, EndlessScrollListener listener) {
+                _pageNumber = pageNumber + 1;
+                displayHome();
+                listener.notifyMorePages();
+            }
+        });
+    }
+
+    void setupRecyclerView() {
         _rv = findViewById(R.id.home_view);
+
         _rv.setLayoutManager(new LinearLayoutManager(this));
         _rv.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -68,18 +84,12 @@ public class Home extends AppCompatActivity {
                 outRect.left = 16;
             }
         });
-        _rv.addOnScrollListener(new EndlessScrollListener(new EndlessScrollListener.RefreshList() {
-            @Override
-            public void onRefresh(int pageNumber, EndlessScrollListener listener) {
-                displayHome(pageNumber + 1);
-                listener.notifyMorePages();
-            }
-        }));
+        _rv.addOnScrollListener(_endlessScrollListener);
     }
 
-    private void displayHome(final int pageNumber) {
+    void displayHome() {
         try {
-            String requestUrl = "https://api.imgur.com/3/gallery/hot/viral/" + pageNumber;
+            String requestUrl = "https://api.imgur.com/3/gallery/hot/viral/" + _pageNumber;
             final Request request = new Request.Builder().url(requestUrl)
                     .addHeader("Authorization", "Bearer " + _user.getAccessToken())
                     .build();
@@ -92,11 +102,18 @@ public class Home extends AppCompatActivity {
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     try {
-                        _images.addAll(InterpretAPIRequest.JSONToImages(response.body().string()));
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() { render(); }
-                        });
+                        final List<Image> additions = InterpretAPIRequest.JSONToImages(Objects.requireNonNull(response.body()).string());
+                        if (additions.size() > 0) {
+                            _images.addAll(additions);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    render();
+                                }
+                            });
+                        } else {
+                            _endlessScrollListener.noMorePages();
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -107,7 +124,7 @@ public class Home extends AppCompatActivity {
         }
     }
 
-    private void render() {
+    void render() {
         if (_adapter == null) {
             _adapter = new BaseAdapter(Home.this, _images, _user);
             _rv.setAdapter(_adapter);
