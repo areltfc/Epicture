@@ -9,7 +9,7 @@
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
-            <eu.delattreepitech.arthur.dev_epicture_2018.TextView.MontserratTextView
+            <eu.delattreepitech.arthur.dev_epicture_2018.TextViews.MontserratTextView
                 android:background="@color/imgur_foreground"
                 android:layout_width="match_parent"
                 android:padding="4dp"

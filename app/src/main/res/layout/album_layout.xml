@@ -27,7 +27,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/imgur_background">
-                    <eu.delattreepitech.arthur.dev_epicture_2018.TextView.MontserratTextView
+                    <eu.delattreepitech.arthur.dev_epicture_2018.TextViews.MontserratTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/album_name"
@@ -38,7 +38,7 @@
                         android:textColor="@color/white"
                         android:background="@color/imgur_foreground" />
 
-                    <eu.delattreepitech.arthur.dev_epicture_2018.TextView.MontserratTextView
+                    <eu.delattreepitech.arthur.dev_epicture_2018.TextViews.MontserratTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/album_name"

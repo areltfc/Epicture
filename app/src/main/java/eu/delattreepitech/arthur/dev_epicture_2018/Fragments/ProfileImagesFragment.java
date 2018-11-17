@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -21,18 +20,16 @@ import com.google.gson.Gson;
 
 import org.json.JSONException;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Objects;
 
-import eu.delattreepitech.arthur.dev_epicture_2018.Adapter.BaseAdapter;
-import eu.delattreepitech.arthur.dev_epicture_2018.Image;
-import eu.delattreepitech.arthur.dev_epicture_2018.InterpretAPIRequest;
+import eu.delattreepitech.arthur.dev_epicture_2018.Adapters.BaseAdapter;
+import eu.delattreepitech.arthur.dev_epicture_2018.Types.Image;
+import eu.delattreepitech.arthur.dev_epicture_2018.RequestUtils.InterpretAPIRequest;
 import eu.delattreepitech.arthur.dev_epicture_2018.R;
-import eu.delattreepitech.arthur.dev_epicture_2018.User;
+import eu.delattreepitech.arthur.dev_epicture_2018.Types.User;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Headers;

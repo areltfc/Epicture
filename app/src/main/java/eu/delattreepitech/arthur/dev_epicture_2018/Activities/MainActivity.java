@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import android.widget.Toast;
 
-import eu.delattreepitech.arthur.dev_epicture_2018.WebView.AuthWebViewClient;
+import eu.delattreepitech.arthur.dev_epicture_2018.WebViews.AuthWebViewClient;
 
 public class MainActivity extends AppCompatActivity {
 

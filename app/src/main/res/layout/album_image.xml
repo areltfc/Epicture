@@ -13,7 +13,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/album_image_layout">
+            android:id="@+id/layout">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -22,9 +22,15 @@
                 android:adjustViewBounds="true"
                 android:id="@+id/image"/>
 
+            <VideoView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+                android:id="@+id/video" />
         </RelativeLayout>
 
-        <eu.delattreepitech.arthur.dev_epicture_2018.TextView.MontserratTextView
+        <eu.delattreepitech.arthur.dev_epicture_2018.TextViews.MontserratTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/text"

@@ -1,4 +1,4 @@
-package eu.delattreepitech.arthur.dev_epicture_2018;
+package eu.delattreepitech.arthur.dev_epicture_2018.Types;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,7 +18,7 @@ public class Image {
     private List<String> _tags;
 
     public Image() { _tags = new ArrayList<>(); }
-    Image(JSONObject src) { _tags = new ArrayList<>(); this.fillFromJSON(src); }
+    public Image(JSONObject src) { _tags = new ArrayList<>(); this.fillFromJSON(src); }
 
     public String getId() { return _id; }
     public String getRealId() { return _realId; }
@@ -59,9 +59,9 @@ public class Image {
         }
     }
 
-    static List<Image> createListFromJSON(final JSONObject src) throws JSONException {
+    public static List<Image> createListFromJSON(final JSONObject src) throws JSONException {
         List<Image> list = new ArrayList<>();
-        if (src.has("is_album") && src.getBoolean("is_album") && src.getInt("images_count") > 1) {
+        if (src.has("is_album") && src.getBoolean("is_album") && src.getInt("images_count") >= 1) {
             JSONArray holder = src.getJSONArray("images");
             for (int i  = 0; i < holder.length(); i++) {
                 list.add(new Image(holder.getJSONObject(i)));

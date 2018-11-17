@@ -1,9 +1,8 @@
-package eu.delattreepitech.arthur.dev_epicture_2018.Adapter;
+package eu.delattreepitech.arthur.dev_epicture_2018.Adapters;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +13,11 @@ import com.google.gson.Gson;
 
 import java.util.List;
 
-import eu.delattreepitech.arthur.dev_epicture_2018.Image;
-import eu.delattreepitech.arthur.dev_epicture_2018.ViewHolder.ImageViewHolder;
+import eu.delattreepitech.arthur.dev_epicture_2018.Types.Image;
+import eu.delattreepitech.arthur.dev_epicture_2018.ViewHolders.ImageViewHolder;
 import eu.delattreepitech.arthur.dev_epicture_2018.R;
-import eu.delattreepitech.arthur.dev_epicture_2018.User;
-import eu.delattreepitech.arthur.dev_epicture_2018.Activities.Detailed;
+import eu.delattreepitech.arthur.dev_epicture_2018.Types.User;
+import eu.delattreepitech.arthur.dev_epicture_2018.Activities.Album;
 
 public class BaseAdapter extends RecyclerView.Adapter {
     private Activity _context;
@@ -47,7 +46,7 @@ public class BaseAdapter extends RecyclerView.Adapter {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Intent detailed = new Intent(_context, Detailed.class);
+                final Intent detailed = new Intent(_context, Album.class);
                 detailed.putExtra("image", new Gson().toJson(image));
                 detailed.putExtra("user", new Gson().toJson(_user));
                 _context.startActivity(detailed);

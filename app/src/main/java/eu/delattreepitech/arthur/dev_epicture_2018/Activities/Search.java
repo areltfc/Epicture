@@ -22,11 +22,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-import eu.delattreepitech.arthur.dev_epicture_2018.Adapter.BaseAdapter;
-import eu.delattreepitech.arthur.dev_epicture_2018.Image;
-import eu.delattreepitech.arthur.dev_epicture_2018.InterpretAPIRequest;
+import eu.delattreepitech.arthur.dev_epicture_2018.Adapters.BaseAdapter;
+import eu.delattreepitech.arthur.dev_epicture_2018.Types.Image;
+import eu.delattreepitech.arthur.dev_epicture_2018.RequestUtils.InterpretAPIRequest;
 import eu.delattreepitech.arthur.dev_epicture_2018.R;
-import eu.delattreepitech.arthur.dev_epicture_2018.User;
+import eu.delattreepitech.arthur.dev_epicture_2018.Types.User;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;

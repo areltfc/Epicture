@@ -1,8 +1,6 @@
 package eu.delattreepitech.arthur.dev_epicture_2018.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
@@ -10,21 +8,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.Objects;
 
 import eu.delattreepitech.arthur.dev_epicture_2018.Fragments.ProfileFavoritesFragment;
 import eu.delattreepitech.arthur.dev_epicture_2018.Fragments.ProfileImagesFragment;
 import eu.delattreepitech.arthur.dev_epicture_2018.R;
-import eu.delattreepitech.arthur.dev_epicture_2018.SectionsPageAdapter;
-import eu.delattreepitech.arthur.dev_epicture_2018.TextView.MontserratTextView;
-import eu.delattreepitech.arthur.dev_epicture_2018.User;
-import okhttp3.OkHttpClient;
+import eu.delattreepitech.arthur.dev_epicture_2018.SectionsPageAdapters.SectionsPageAdapter;
+import eu.delattreepitech.arthur.dev_epicture_2018.Types.User;
 
 public class Profile extends AppCompatActivity {
 

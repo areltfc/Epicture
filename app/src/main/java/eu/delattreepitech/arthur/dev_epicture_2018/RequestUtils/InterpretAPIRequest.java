@@ -1,4 +1,4 @@
-package eu.delattreepitech.arthur.dev_epicture_2018;
+package eu.delattreepitech.arthur.dev_epicture_2018.RequestUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -6,6 +6,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import eu.delattreepitech.arthur.dev_epicture_2018.Types.Image;
 
 public class InterpretAPIRequest {
     public static List<Image> JSONToImages(String requestBody) throws JSONException {

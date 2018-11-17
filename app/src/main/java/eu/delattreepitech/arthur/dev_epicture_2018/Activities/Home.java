@@ -16,14 +16,16 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import eu.delattreepitech.arthur.dev_epicture_2018.Adapter.BaseAdapter;
-import eu.delattreepitech.arthur.dev_epicture_2018.Image;
-import eu.delattreepitech.arthur.dev_epicture_2018.InterpretAPIRequest;
+import eu.delattreepitech.arthur.dev_epicture_2018.Adapters.BaseAdapter;
+import eu.delattreepitech.arthur.dev_epicture_2018.Types.Image;
+import eu.delattreepitech.arthur.dev_epicture_2018.RequestUtils.InterpretAPIRequest;
 import eu.delattreepitech.arthur.dev_epicture_2018.R;
-import eu.delattreepitech.arthur.dev_epicture_2018.User;
+import eu.delattreepitech.arthur.dev_epicture_2018.Types.User;
+import eu.delattreepitech.arthur.dev_epicture_2018.RecyclerView.OnScrollListeners.*;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -34,6 +36,9 @@ public class Home extends AppCompatActivity {
 
     private User _user = null;
     private OkHttpClient _client;
+    private RecyclerView _rv;
+    private List<Image> _images;
+    private BaseAdapter _adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,46 +48,15 @@ public class Home extends AppCompatActivity {
 
         _user = new Gson().fromJson(Objects.requireNonNull(getIntent().getExtras()).getString("user"), User.class);
         _client = new OkHttpClient.Builder().build();
-        this.displayHome();
+        _images = new ArrayList<>();
+        displayHome(0);
+        setupRecyclerView();
     }
 
-    protected void displayHome() {
-        try {
-            Request request = new Request.Builder().url("https://api.imgur.com/3/gallery/hot/viral/")
-                    .addHeader("Authorization", "Bearer " + _user.getAccessToken())
-                    .build();
-            _client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    e.printStackTrace();
-                }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    try {
-                        final List<Image> images = InterpretAPIRequest.JSONToImages(response.body().string());
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                render(images);
-                            }
-                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void render(final List<Image> images) {
-        RecyclerView v = findViewById(R.id.home_view);
-        v.setLayoutManager(new LinearLayoutManager(this));
-        BaseAdapter adapter = new BaseAdapter(this, images, _user);
-        v.setAdapter(adapter);
-        v.addItemDecoration(new RecyclerView.ItemDecoration() {
+    private void setupRecyclerView() {
+        _rv = findViewById(R.id.home_view);
+        _rv.setLayoutManager(new LinearLayoutManager(this));
+        _rv.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect,
                                        @NonNull View view,
@@ -94,6 +68,51 @@ public class Home extends AppCompatActivity {
                 outRect.left = 16;
             }
         });
+        _rv.addOnScrollListener(new EndlessScrollListener(new EndlessScrollListener.RefreshList() {
+            @Override
+            public void onRefresh(int pageNumber, EndlessScrollListener listener) {
+                displayHome(pageNumber + 1);
+                listener.notifyMorePages();
+            }
+        }));
+    }
+
+    private void displayHome(final int pageNumber) {
+        try {
+            String requestUrl = "https://api.imgur.com/3/gallery/hot/viral/" + pageNumber;
+            System.out.println(requestUrl);
+            Request request = new Request.Builder().url(requestUrl)
+                    .addHeader("Authorization", "Bearer " + _user.getAccessToken())
+                    .build();
+            _client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    try {
+                        _images.addAll(InterpretAPIRequest.JSONToImages(response.body().string()));
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (_adapter == null) {
+                                    _adapter = new BaseAdapter(Home.this, _images, _user);
+                                    _rv.setAdapter(_adapter);
+                                } else {
+                                    _adapter.notifyDataSetChanged();
+                                }
+                            }
+                        });
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void onClickHome(MenuItem item) {

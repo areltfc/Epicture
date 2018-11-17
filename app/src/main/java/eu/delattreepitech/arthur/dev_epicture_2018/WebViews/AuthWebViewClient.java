@@ -1,4 +1,4 @@
-package eu.delattreepitech.arthur.dev_epicture_2018.WebView;
+package eu.delattreepitech.arthur.dev_epicture_2018.WebViews;
 
 import android.content.Intent;
 import android.webkit.WebView;
@@ -8,8 +8,7 @@ import com.google.gson.Gson;
 
 import eu.delattreepitech.arthur.dev_epicture_2018.Activities.Home;
 import eu.delattreepitech.arthur.dev_epicture_2018.Activities.MainActivity;
-import eu.delattreepitech.arthur.dev_epicture_2018.R;
-import eu.delattreepitech.arthur.dev_epicture_2018.User;
+import eu.delattreepitech.arthur.dev_epicture_2018.Types.User;
 
 public class AuthWebViewClient extends WebViewClient {
     private MainActivity _context;

@@ -1,4 +1,4 @@
-package eu.delattreepitech.arthur.dev_epicture_2018.Adapter;
+package eu.delattreepitech.arthur.dev_epicture_2018.Adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import eu.delattreepitech.arthur.dev_epicture_2018.R;
-import eu.delattreepitech.arthur.dev_epicture_2018.User;
-import eu.delattreepitech.arthur.dev_epicture_2018.ViewHolder.TagViewHolder;
+import eu.delattreepitech.arthur.dev_epicture_2018.Types.User;
+import eu.delattreepitech.arthur.dev_epicture_2018.ViewHolders.TagViewHolder;
 
 public class TagsAdapter extends RecyclerView.Adapter {
     private AppCompatActivity _context;

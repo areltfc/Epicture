@@ -22,13 +22,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-import eu.delattreepitech.arthur.dev_epicture_2018.Adapter.AlbumAdapter;
-import eu.delattreepitech.arthur.dev_epicture_2018.Adapter.TagsAdapter;
-import eu.delattreepitech.arthur.dev_epicture_2018.Image;
-import eu.delattreepitech.arthur.dev_epicture_2018.InterpretAPIRequest;
+import eu.delattreepitech.arthur.dev_epicture_2018.Adapters.AlbumAdapter;
+import eu.delattreepitech.arthur.dev_epicture_2018.Adapters.TagsAdapter;
+import eu.delattreepitech.arthur.dev_epicture_2018.Types.Image;
+import eu.delattreepitech.arthur.dev_epicture_2018.RequestUtils.InterpretAPIRequest;
 import eu.delattreepitech.arthur.dev_epicture_2018.R;
-import eu.delattreepitech.arthur.dev_epicture_2018.TextView.MontserratTextView;
-import eu.delattreepitech.arthur.dev_epicture_2018.User;
+import eu.delattreepitech.arthur.dev_epicture_2018.TextViews.MontserratTextView;
+import eu.delattreepitech.arthur.dev_epicture_2018.Types.User;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MultipartBody;
@@ -37,7 +37,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class Detailed extends AppCompatActivity {
+public class Album extends AppCompatActivity {
     private OkHttpClient _client;
     private User _user;
     private Image _cover;
@@ -100,8 +100,8 @@ public class Detailed extends AppCompatActivity {
 
     private void renderAlbum() {
         RecyclerView v = findViewById(R.id.album_images_view);
-        v.setLayoutManager(new LinearLayoutManager(Detailed.this));
-        AlbumAdapter adapter = new AlbumAdapter(Detailed.this, _album, _user);
+        v.setLayoutManager(new LinearLayoutManager(Album.this));
+        AlbumAdapter adapter = new AlbumAdapter(Album.this, _album, _user);
         v.setAdapter(adapter);
         v.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -136,8 +136,8 @@ public class Detailed extends AppCompatActivity {
 
     private void renderTags() {
         RecyclerView v = findViewById(R.id.album_tags_view);
-        v.setLayoutManager(new LinearLayoutManager(Detailed.this));
-        v.setAdapter(new TagsAdapter(Detailed.this, _cover.getTags(), _user));
+        v.setLayoutManager(new LinearLayoutManager(Album.this));
+        v.setAdapter(new TagsAdapter(Album.this, _cover.getTags(), _user));
         v.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(@NonNull Rect outRect,
@@ -145,6 +145,7 @@ public class Detailed extends AppCompatActivity {
                                        @NonNull RecyclerView parent,
                                        @NonNull RecyclerView.State state) {
                 outRect.bottom = 16;
+                outRect.left = 16;
             }
         });
     }
@@ -172,11 +173,6 @@ public class Detailed extends AppCompatActivity {
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) {
-                try {
-                    System.out.println(response.body().string());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

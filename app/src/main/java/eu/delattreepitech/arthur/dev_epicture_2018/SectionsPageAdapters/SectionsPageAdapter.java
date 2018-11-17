@@ -1,4 +1,4 @@
-package eu.delattreepitech.arthur.dev_epicture_2018;
+package eu.delattreepitech.arthur.dev_epicture_2018.SectionsPageAdapters;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;

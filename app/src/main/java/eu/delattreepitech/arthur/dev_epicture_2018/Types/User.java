@@ -1,4 +1,4 @@
-package eu.delattreepitech.arthur.dev_epicture_2018;
+package eu.delattreepitech.arthur.dev_epicture_2018.Types;
 
 import android.net.UrlQuerySanitizer;
 
