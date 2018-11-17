@@ -80,7 +80,6 @@ public class Home extends AppCompatActivity {
     private void displayHome(final int pageNumber) {
         try {
             String requestUrl = "https://api.imgur.com/3/gallery/hot/viral/" + pageNumber;
-            System.out.println(requestUrl);
             Request request = new Request.Builder().url(requestUrl)
                     .addHeader("Authorization", "Bearer " + _user.getAccessToken())
                     .build();

@@ -125,7 +125,6 @@ public class ProfileImagesFragment extends Fragment {
                 .addPart(Headers.of("Content-Disposition", "form-data; name=\"image\""),
                         RequestBody.create(MediaType.parse("image/jpg"), imageStr))
                 .build();
-        System.out.println(requestBody.contentType());
         Request request = new Request.Builder().addHeader("Authorization", "Bearer " + _user.getAccessToken())
                 .url("https://api.imgur.com/3/image")
                 .post(requestBody)
