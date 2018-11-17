@@ -8,6 +8,7 @@
     <string name="image_account">by %1$s</string>
     <string name="remove_from_favorites">Remove from your favorites</string>
     <string name="add_to_favorites">Add to your favorites</string>
+    <string name="shared_preferences_file">epicture_shared_preferences</string>
 
     <string-array name="search_sort_items">
         <item>Time</item>

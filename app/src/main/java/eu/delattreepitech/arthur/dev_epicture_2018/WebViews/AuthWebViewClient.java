@@ -1,20 +1,23 @@
 package eu.delattreepitech.arthur.dev_epicture_2018.WebViews;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.google.gson.Gson;
 
 import eu.delattreepitech.arthur.dev_epicture_2018.Activities.Home;
-import eu.delattreepitech.arthur.dev_epicture_2018.Activities.MainActivity;
+import eu.delattreepitech.arthur.dev_epicture_2018.Activities.Login;
+import eu.delattreepitech.arthur.dev_epicture_2018.R;
 import eu.delattreepitech.arthur.dev_epicture_2018.Types.User;
 
 public class AuthWebViewClient extends WebViewClient {
-    private MainActivity _context;
+    private Login _context;
     private boolean _stopRedirecting;
 
-    public AuthWebViewClient(MainActivity context) {
+    public AuthWebViewClient(Login context) {
         super();
         _context = context;
         _stopRedirecting = false;
@@ -45,7 +48,11 @@ public class AuthWebViewClient extends WebViewClient {
     }
 
     private void accessGranted(String url) {
+        final SharedPreferences.Editor sharedPref = _context.getSharedPreferences(_context.getString(R.string.shared_preferences_file), Context.MODE_PRIVATE).edit();
         final Intent home = new Intent(_context, Home.class);
+
+        sharedPref.putString("tokens", url);
+        sharedPref.apply();
         home.putExtra("user", new Gson().toJson(new User(url)));
         _context.startActivity(home);
     }
