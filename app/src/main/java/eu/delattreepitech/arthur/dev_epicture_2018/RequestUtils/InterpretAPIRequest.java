@@ -11,11 +11,18 @@ import eu.delattreepitech.arthur.dev_epicture_2018.Types.Image;
 
 public class InterpretAPIRequest {
     public static List<Image> JSONToImages(String requestBody) throws JSONException {
+        System.out.println(requestBody);
         JSONObject obj = new JSONObject(requestBody);
-        JSONArray data = obj.getJSONArray("data");
+        Object data = obj.get("data");
+        JSONArray dataArray;
+        if (data instanceof JSONArray) {
+            dataArray = (JSONArray) data;
+        } else {
+            dataArray = ((JSONObject) data).getJSONArray("items");
+        }
         final List<Image> images = new ArrayList<>();
-        for (int i = 0; i < data.length(); i++) {
-            images.add(new Image(data.getJSONObject(i)));
+        for (int i = 0; i < dataArray.length(); i++) {
+            images.add(new Image(dataArray.getJSONObject(i)));
         }
         return images;
     }

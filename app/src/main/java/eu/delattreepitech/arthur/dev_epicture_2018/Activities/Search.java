@@ -62,6 +62,11 @@ public class Search extends AppCompatActivity {
         setupRecyclerView();
         setupSearchBar();
         setupSpinners();
+
+        String redirectedQuery = Objects.requireNonNull(getIntent().getExtras()).getString("query");
+        if (redirectedQuery != null) {
+            _bar.setQuery("#" + redirectedQuery, true);
+        }
     }
 
     private void setupEndlessScrollListener() {
@@ -138,10 +143,8 @@ public class Search extends AppCompatActivity {
     }
 
     private void displaySearch() {
-        String url = "https://api.imgur.com/3/gallery/search/" + _sort.getSelectedItem().toString().toLowerCase()
-                + "/" + _window.getSelectedItem().toString().toLowerCase() + "/" + _pageNumber + "/?q=" + _bar.getQuery().toString();
         try {
-            Request request = new Request.Builder().url(url)
+            Request request = new Request.Builder().url(getEndpoint())
                     .addHeader("Authorization", "Bearer " + _user.getAccessToken())
                     .build();
             _client.newCall(request).enqueue(new Callback() {
@@ -178,6 +181,23 @@ public class Search extends AppCompatActivity {
         }
     }
 
+    private String getEndpoint() {
+        String query = _bar.getQuery().toString();
+        String endpoint;
+
+        if (query.charAt(0) == '#') {
+            endpoint = "https://api.imgur.com/3/gallery/t/" + query.replace(' ', '-').substring(1)
+                    + "/" + _sort.getSelectedItem().toString().toLowerCase()
+                    + "/" + _window.getSelectedItem().toString().toLowerCase() + "/" + _pageNumber;
+        } else {
+            endpoint = "https://api.imgur.com/3/gallery/search/"
+                    + _sort.getSelectedItem().toString().toLowerCase()
+                    + "/" + _window.getSelectedItem().toString().toLowerCase()
+                    + "/" + _pageNumber + "/?q=" + query;
+        }
+        System.out.println(endpoint);
+        return endpoint;
+    }
     private void render() {
         if (_adapter == null || _spinnerUpdate) {
             _spinnerUpdate = false;
