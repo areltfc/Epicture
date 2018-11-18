@@ -11,7 +11,6 @@ import eu.delattreepitech.arthur.dev_epicture_2018.Types.Image;
 
 public class InterpretAPIRequest {
     public static List<Image> JSONToImages(String requestBody) throws JSONException {
-        System.out.println(requestBody);
         JSONObject obj = new JSONObject(requestBody);
         Object data = obj.get("data");
         JSONArray dataArray;

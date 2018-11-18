@@ -195,7 +195,6 @@ public class Search extends AppCompatActivity {
                     + "/" + _window.getSelectedItem().toString().toLowerCase()
                     + "/" + _pageNumber + "/?q=" + query;
         }
-        System.out.println(endpoint);
         return endpoint;
     }
     private void render() {
