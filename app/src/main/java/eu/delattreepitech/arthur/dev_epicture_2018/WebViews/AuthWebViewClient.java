@@ -3,6 +3,8 @@ package eu.delattreepitech.arthur.dev_epicture_2018.WebViews;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -25,12 +27,21 @@ public class AuthWebViewClient extends WebViewClient {
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        return handleUrl(view, url);
+    }
+
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+        return handleUrl(view, request.getUrl().toString());
+    }
+
+    private boolean handleUrl(WebView view, String url) {
         if (url.contains("facebook") || url.contains("twitter") || url.contains("google") || url.contains("yahoo")) {
             view.loadUrl(url);
             return true;
         } else {
             if (url.contains("callback?error=access_denied")) {
-               accessDenied();
+                accessDenied();
             } else {
                 if (!_stopRedirecting) {
                     _stopRedirecting = true;
