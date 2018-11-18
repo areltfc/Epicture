@@ -10,7 +10,6 @@ import java.util.Objects;
 public class EndlessScrollListener extends RecyclerView.OnScrollListener {
     private boolean _isLoading;
     private boolean _hasMorePages;
-    private int _pageNumber = 0;
     private RefreshList _refreshList;
     private boolean _isRefreshing;
     private int _pastVisibleItems;
@@ -36,7 +35,7 @@ public class EndlessScrollListener extends RecyclerView.OnScrollListener {
                 _isRefreshing = true;
                 new Handler().postDelayed(new Runnable() {
                     @Override public void run() {
-                        _refreshList.onRefresh(_pageNumber, EndlessScrollListener.this);
+                        _refreshList.onRefresh(EndlessScrollListener.this);
                     }
                 }, 200);
             }
@@ -48,7 +47,6 @@ public class EndlessScrollListener extends RecyclerView.OnScrollListener {
     public void reset() {
         _isLoading = false;
         _hasMorePages = true;
-        _pageNumber = 0;
     }
 
     public void noMorePages() {
@@ -57,10 +55,9 @@ public class EndlessScrollListener extends RecyclerView.OnScrollListener {
 
     public void notifyMorePages() {
         _isRefreshing = false;
-        _pageNumber = _pageNumber + 1;
     }
 
     public interface RefreshList {
-        void onRefresh(int pageNumber, EndlessScrollListener listener);
+        void onRefresh(EndlessScrollListener listener);
     }
 }

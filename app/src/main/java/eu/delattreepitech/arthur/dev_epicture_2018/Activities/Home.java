@@ -60,8 +60,7 @@ public class Home extends AppCompatActivity {
     void setupEndlessScrollListener() {
         _endlessScrollListener = new EndlessScrollListener(new EndlessScrollListener.RefreshList() {
             @Override
-            public void onRefresh(int pageNumber, EndlessScrollListener listener) {
-                _pageNumber = pageNumber + 1;
+            public void onRefresh(EndlessScrollListener listener) {
                 displayHome();
                 listener.notifyMorePages();
             }
@@ -102,6 +101,7 @@ public class Home extends AppCompatActivity {
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     try {
+                        _pageNumber++;
                         final List<Image> additions = InterpretAPIRequest.JSONToImages(Objects.requireNonNull(response.body()).string());
                         if (additions.size() > 0) {
                             _images.addAll(additions);

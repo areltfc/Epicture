@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -72,8 +74,7 @@ public class Search extends AppCompatActivity {
     private void setupEndlessScrollListener() {
         _endlessScrollListener = new EndlessScrollListener(new EndlessScrollListener.RefreshList() {
             @Override
-            public void onRefresh(int pageNumber, EndlessScrollListener listener) {
-                _pageNumber = pageNumber + 1;
+            public void onRefresh(EndlessScrollListener listener) {
                 listener.notifyMorePages();
                 displaySearch();
             }
@@ -124,6 +125,8 @@ public class Search extends AppCompatActivity {
         _window = findViewById(R.id.search_window);
         _spinnerUpdate = false;
 
+        _sort.setSelection(0, false);
+        _window.setSelection(0, false);
         AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -142,6 +145,23 @@ public class Search extends AppCompatActivity {
         _window.setOnItemSelectedListener(listener);
     }
 
+    private String getEndpoint() {
+        String query = _bar.getQuery().toString();
+        String endpoint;
+
+        if (query.charAt(0) == '#') {
+            endpoint = "https://api.imgur.com/3/gallery/t/" + query.replace(' ', '_').substring(1)
+                    + "/" + _sort.getSelectedItem().toString().toLowerCase()
+                    + "/" + _window.getSelectedItem().toString().toLowerCase() + "/" + _pageNumber;
+        } else {
+            endpoint = "https://api.imgur.com/3/gallery/search/"
+                    + _sort.getSelectedItem().toString().toLowerCase()
+                    + "/" + _window.getSelectedItem().toString().toLowerCase()
+                    + "/" + _pageNumber + "/?q=" + query;
+        }
+        return endpoint;
+    }
+
     private void displaySearch() {
         try {
             Request request = new Request.Builder().url(getEndpoint())
@@ -156,20 +176,30 @@ public class Search extends AppCompatActivity {
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     try {
-                        if (_spinnerUpdate) {
-                            _images = new ArrayList<>();
-                        }
-                        final List<Image> additions = InterpretAPIRequest.JSONToImages(Objects.requireNonNull(response.body()).string());
-                        if (additions.size() > 0) {
-                            _images.addAll(additions);
+                        if (response.isSuccessful()) {
+                            _pageNumber++;
+                            if (_spinnerUpdate) {
+                                _images = new ArrayList<>();
+                            }
+                            final List<Image> additions = InterpretAPIRequest.JSONToImages(Objects.requireNonNull(response.body()).string());
+                            if (additions.size() > 0) {
+                                _images.addAll(additions);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        render();
+                                    }
+                                });
+                            } else {
+                                _endlessScrollListener.noMorePages();
+                            }
+                        } else {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    render();
+                                    Toast.makeText(getApplicationContext(), "An error occurred", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                        } else {
-                            _endlessScrollListener.noMorePages();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -179,23 +209,6 @@ public class Search extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private String getEndpoint() {
-        String query = _bar.getQuery().toString();
-        String endpoint;
-
-        if (query.charAt(0) == '#') {
-            endpoint = "https://api.imgur.com/3/gallery/t/" + query.replace(' ', '-').substring(1)
-                    + "/" + _sort.getSelectedItem().toString().toLowerCase()
-                    + "/" + _window.getSelectedItem().toString().toLowerCase() + "/" + _pageNumber;
-        } else {
-            endpoint = "https://api.imgur.com/3/gallery/search/"
-                    + _sort.getSelectedItem().toString().toLowerCase()
-                    + "/" + _window.getSelectedItem().toString().toLowerCase()
-                    + "/" + _pageNumber + "/?q=" + query;
-        }
-        return endpoint;
     }
     private void render() {
         if (_adapter == null || _spinnerUpdate) {

@@ -69,8 +69,7 @@ public class ProfileFavoritesFragment extends Fragment {
     void setupEndlessScrollListener() {
         _endlessScrollListener = new EndlessScrollListener(new EndlessScrollListener.RefreshList() {
             @Override
-            public void onRefresh(int pageNumber, EndlessScrollListener listener) {
-                _pageNumber = pageNumber + 1;
+            public void onRefresh(EndlessScrollListener listener) {
                 displayFavorites();
                 listener.notifyMorePages();
             }
@@ -112,6 +111,7 @@ public class ProfileFavoritesFragment extends Fragment {
                 @Override
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     try {
+                        _pageNumber++;
                         final List<Image> additions = InterpretAPIRequest.JSONToImages(Objects.requireNonNull(response.body()).string());
                         if (additions.size() > 0) {
                             _images.addAll(additions);

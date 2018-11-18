@@ -3,7 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@color/imgur_foreground"
-    android:id="@+id/album_tag_template">
+    android:id="@+id/album_tag_template"
+    android:clickable="true">
     <LinearLayout
         android:background="@color/imgur_foreground"
         android:orientation="horizontal"

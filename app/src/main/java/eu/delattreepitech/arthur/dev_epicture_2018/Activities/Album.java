@@ -52,10 +52,16 @@ public class Album extends AppCompatActivity {
         _cover = new Gson().fromJson(Objects.requireNonNull(getIntent().getExtras()).getString("image"), Image.class);
         _user = new Gson().fromJson(Objects.requireNonNull(getIntent().getExtras()).getString("user"), User.class);
         _client = new OkHttpClient.Builder().build();
+
+        setupFavorite();
+
         displayAlbum();
         displayTitle();
         displayAccount();
         displayTags();
+    }
+
+    private void setupFavorite() {
         CheckBox favorite = findViewById(R.id.favorite);
         favorite.setChecked(_cover.getFavorite());
         if (favorite.isChecked()) {
